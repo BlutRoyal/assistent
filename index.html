@@ -148,7 +148,6 @@ function seed() {
 let S;
 try { S = JSON.parse(localStorage.getItem(LS)); } catch (e) { S = null; }
 if (!S || !S.tasks) S = seed();
-S.tasks = (S.tasks || []).map(fixItem); S.projects = (S.projects || []).map(fixItem);
 S.events = S.events || [];
 let lastErr = '';
 const EMO = [['hambaarst','\u{1F9B7}'],['hammas','\u{1F9B7}'],['arst','\u{1FA7A}'],['vaktsiin','\u{1F489}'],['haigla','\u{1F3E5}'],['ravim','\u{1F48A}'],['apteek','\u{1F48A}'],['tervis','\u{1FA7A}'],['juuksur','\u2702\uFE0F'],['s\u00FCnnip\u00E4ev','\u{1F382}'],['kingitus','\u{1F381}'],['auto','\u{1F697}'],['rehv','\u{1F697}'],['\u00FClevaatus','\u{1F697}'],['tankima','\u26FD'],['kindlustus','\u{1F6E1}\uFE0F'],['maks','\u{1F4B6}'],['deklar','\u{1F4B6}'],['arve','\u{1F9FE}'],['pank','\u{1F3E6}'],['raha','\u{1F4B6}'],['makse','\u{1F4B6}'],['kruvi','\u{1F529}'],['import','\u{1F4E6}'],['tolli','\u{1F4E6}'],['spim','\u{1F4E6}'],['tellimus','\u{1F4E6}'],['pakk','\u{1F4E6}'],['eksam','\u{1F4DD}'],['kool','\u{1F4DA}'],['\u00F5pi','\u{1F4DA}'],['nba','\u{1F3C0}'],['fantasy','\u{1F3C0}'],['korv','\u{1F3C0}'],['trenn','\u{1F4AA}'],['j\u00F5usaal','\u{1F4AA}'],['jooks','\u{1F3C3}'],['sport','\u{1F3C5}'],['m\u00E4ng','\u{1F3AE}'],['osta','\u{1F6D2}'],['pood','\u{1F6D2}'],['toidupood','\u{1F6D2}'],['helista','\u{1F4DE}'],['k\u00F5ne','\u{1F4DE}'],['e-post','\u{1F4E7}'],['mail','\u{1F4E7}'],['kiri','\u{1F4E7}'],['lend','\u2708\uFE0F'],['reis','\u2708\uFE0F'],['puhkus','\u{1F3D6}\uFE0F'],['hotell','\u{1F3E8}'],['koosolek','\u{1F465}'],['kohtumine','\u{1F465}'],['\u00E4pp','\u{1F4BB}'],['kood','\u{1F4BB}'],['github','\u{1F4BB}'],['projekt','\u{1F5C2}\uFE0F'],['kass','\u{1F431}'],['koer','\u{1F436}'],['veterinaar','\u{1F43E}'],['l\u00F5una','\u{1F37D}\uFE0F'],['\u00F5htus\u00F6\u00F6k','\u{1F37D}\uFE0F'],['restoran','\u{1F37D}\uFE0F'],['s\u00F6\u00F6k','\u{1F37D}\uFE0F'],['ehita','\u{1F528}'],['remont','\u{1F527}'],['ehitus','\u{1F528}'],['koristus','\u{1F9F9}'],['pesu','\u{1F9FA}'],['kino','\u{1F3AC}'],['film','\u{1F3AC}'],['kontsert','\u{1F3B5}'],['muusika','\u{1F3B5}'],['uuri','\u{1F50E}'],['k\u00FCsi uuesti','\u23F3'],['ootan','\u23F3']];
@@ -190,6 +189,7 @@ function fixMoji(s) {
   try { return new TextDecoder('utf-8', { fatal: true }).decode(new Uint8Array(bytes)); } catch (e) { return s; }
 }
 function fixItem(o) { ['title', 'meta', 'waitFor', 'name', 'note', 'next', 'tag'].forEach((k) => { if (o[k]) { const f = fixMoji(o[k]); if (f !== o[k]) { o[k] = f; o.updated = Date.now(); } } }); return o; }
+S.tasks = (S.tasks || []).map(fixItem); S.projects = (S.projects || []).map(fixItem);
 let healed = false;
 function mergeInto(local, incoming) {
   incoming = incoming.map(fixItem);
