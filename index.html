@@ -90,6 +90,8 @@ main{flex:1;min-height:0;overflow-y:auto;padding:0 20px 12px}
 .chips button{height:30px;padding:0 10px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'Pixelify Sans','VT323',monospace;font-weight:700;font-size:12px}
 .chips button.on{background:var(--ink);color:var(--cream)}
 .chk.on{background:var(--ink)}
+.lab,.btn,.tag,.seg button,.tabs,.tabs button,.dhead,.ev .tm,.rt span,.chips button,.wd,.toast,.mhead button{font-family:'VT323',monospace!important;font-weight:400!important;font-size:17px!important;letter-spacing:.02em}
+.btn.big{font-size:19px!important}
 .inp{width:100%;height:48px;padding:0 12px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'VT323',monospace;font-size:22px}
 </style>
 </head>
@@ -103,14 +105,14 @@ main{flex:1;min-height:0;overflow-y:auto;padding:0 20px 12px}
   <main id="view"></main>
   <div class="dock">
     <form class="cap" id="capForm" autocomplete="off">
-      <label for="capture" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Kirjuta või dikteeri</label>
-      <input id="capture" type="text" enterkeyhint="send" placeholder="Kirjuta või dikteeri...">
+      <label for="capture" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Kirjuta v&#xF5;i dikteeri</label>
+      <input id="capture" type="text" enterkeyhint="send" placeholder="Kirjuta v&#xF5;i dikteeri...">
       <button type="button" class="mic" id="mic" aria-label="Dikteeri">
         <svg width="24" height="30" viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true"><g fill="#F9F7CF"><rect x="3" y="0" width="3" height="6"/><rect x="2" y="1" width="5" height="4"/><rect x="1" y="5" width="1" height="2"/><rect x="7" y="5" width="1" height="2"/><rect x="2" y="7" width="5" height="1"/><rect x="4" y="8" width="1" height="2"/><rect x="2" y="10" width="5" height="1"/></g></svg>
       </button>
     </form>
     <nav class="tabs" id="tabs">
-      <button data-tab="today">TÄNA</button>
+      <button data-tab="today">T&#xC4;NA</button>
       <button data-tab="cal">KALENDER</button>
       <button data-tab="projects">PROJEKTID</button>
       <button data-tab="research">UURI</button>
@@ -133,7 +135,7 @@ const dayDiff = (a, b) => Math.round((utc(a) - utc(b)) / 864e5);
 const addDays = (s, n) => new Date(utc(s) + n * 864e5).toISOString().slice(0, 10);
 const wdOf = (s) => new Date(utc(s)).getUTCDay();
 const WD = ['P', 'E', 'T', 'K', 'N', 'R', 'L'];
-const MONTHS = ['jaanuar', 'veebruar', 'märts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'];
+const MONTHS = ['jaanuar', 'veebruar', 'm\u00E4rts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'];
 const dm = (s) => s.slice(8, 10) + '.' + s.slice(5, 7);
 const wdDm = (s) => WD[wdOf(s)] + ' ' + dm(s);
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -146,17 +148,18 @@ function seed() {
 let S;
 try { S = JSON.parse(localStorage.getItem(LS)); } catch (e) { S = null; }
 if (!S || !S.tasks) S = seed();
+S.tasks = (S.tasks || []).map(fixItem); S.projects = (S.projects || []).map(fixItem);
 S.events = S.events || [];
 let lastErr = '';
-const EMO = [['hambaarst','🦷'],['hammas','🦷'],['arst','🩺'],['vaktsiin','💉'],['haigla','🏥'],['ravim','💊'],['apteek','💊'],['tervis','🩺'],['juuksur','✂️'],['sünnipäev','🎂'],['kingitus','🎁'],['auto','🚗'],['rehv','🚗'],['ülevaatus','🚗'],['tankima','⛽'],['kindlustus','🛡️'],['maks','💶'],['deklar','💶'],['arve','🧾'],['pank','🏦'],['raha','💶'],['makse','💶'],['kruvi','🔩'],['import','📦'],['tolli','📦'],['spim','📦'],['tellimus','📦'],['pakk','📦'],['eksam','📝'],['kool','📚'],['õpi','📚'],['nba','🏀'],['fantasy','🏀'],['korv','🏀'],['trenn','💪'],['jõusaal','💪'],['jooks','🏃'],['sport','🏅'],['mäng','🎮'],['osta','🛒'],['pood','🛒'],['toidupood','🛒'],['helista','📞'],['kõne','📞'],['e-post','📧'],['mail','📧'],['kiri','📧'],['lend','✈️'],['reis','✈️'],['puhkus','🏖️'],['hotell','🏨'],['koosolek','👥'],['kohtumine','👥'],['äpp','💻'],['kood','💻'],['github','💻'],['projekt','🗂️'],['kass','🐱'],['koer','🐶'],['veterinaar','🐾'],['lõuna','🍽️'],['õhtusöök','🍽️'],['restoran','🍽️'],['söök','🍽️'],['ehita','🔨'],['remont','🔧'],['ehitus','🔨'],['koristus','🧹'],['pesu','🧺'],['kino','🎬'],['film','🎬'],['kontsert','🎵'],['muusika','🎵'],['uuri','🔎'],['küsi uuesti','⏳'],['ootan','⏳']];
+const EMO = [['hambaarst','\u{1F9B7}'],['hammas','\u{1F9B7}'],['arst','\u{1FA7A}'],['vaktsiin','\u{1F489}'],['haigla','\u{1F3E5}'],['ravim','\u{1F48A}'],['apteek','\u{1F48A}'],['tervis','\u{1FA7A}'],['juuksur','\u2702\uFE0F'],['s\u00FCnnip\u00E4ev','\u{1F382}'],['kingitus','\u{1F381}'],['auto','\u{1F697}'],['rehv','\u{1F697}'],['\u00FClevaatus','\u{1F697}'],['tankima','\u26FD'],['kindlustus','\u{1F6E1}\uFE0F'],['maks','\u{1F4B6}'],['deklar','\u{1F4B6}'],['arve','\u{1F9FE}'],['pank','\u{1F3E6}'],['raha','\u{1F4B6}'],['makse','\u{1F4B6}'],['kruvi','\u{1F529}'],['import','\u{1F4E6}'],['tolli','\u{1F4E6}'],['spim','\u{1F4E6}'],['tellimus','\u{1F4E6}'],['pakk','\u{1F4E6}'],['eksam','\u{1F4DD}'],['kool','\u{1F4DA}'],['\u00F5pi','\u{1F4DA}'],['nba','\u{1F3C0}'],['fantasy','\u{1F3C0}'],['korv','\u{1F3C0}'],['trenn','\u{1F4AA}'],['j\u00F5usaal','\u{1F4AA}'],['jooks','\u{1F3C3}'],['sport','\u{1F3C5}'],['m\u00E4ng','\u{1F3AE}'],['osta','\u{1F6D2}'],['pood','\u{1F6D2}'],['toidupood','\u{1F6D2}'],['helista','\u{1F4DE}'],['k\u00F5ne','\u{1F4DE}'],['e-post','\u{1F4E7}'],['mail','\u{1F4E7}'],['kiri','\u{1F4E7}'],['lend','\u2708\uFE0F'],['reis','\u2708\uFE0F'],['puhkus','\u{1F3D6}\uFE0F'],['hotell','\u{1F3E8}'],['koosolek','\u{1F465}'],['kohtumine','\u{1F465}'],['\u00E4pp','\u{1F4BB}'],['kood','\u{1F4BB}'],['github','\u{1F4BB}'],['projekt','\u{1F5C2}\uFE0F'],['kass','\u{1F431}'],['koer','\u{1F436}'],['veterinaar','\u{1F43E}'],['l\u00F5una','\u{1F37D}\uFE0F'],['\u00F5htus\u00F6\u00F6k','\u{1F37D}\uFE0F'],['restoran','\u{1F37D}\uFE0F'],['s\u00F6\u00F6k','\u{1F37D}\uFE0F'],['ehita','\u{1F528}'],['remont','\u{1F527}'],['ehitus','\u{1F528}'],['koristus','\u{1F9F9}'],['pesu','\u{1F9FA}'],['kino','\u{1F3AC}'],['film','\u{1F3AC}'],['kontsert','\u{1F3B5}'],['muusika','\u{1F3B5}'],['uuri','\u{1F50E}'],['k\u00FCsi uuesti','\u23F3'],['ootan','\u23F3']];
 const emo = (title) => {
   const t = String(title || '');
-  if (!t || /^\p{Extended_Pictographic}/u.test(t) || t.charAt(0) === '▸') return t;
+  if (!t || /^\p{Extended_Pictographic}/u.test(t) || t.charAt(0) === '\u25B8') return t;
   const low = t.toLowerCase();
   for (let i = 0; i < EMO.length; i++) if (low.indexOf(EMO[i][0]) >= 0) return EMO[i][1] + ' ' + t;
   return t;
 };
-const REPL = { daily: 'PÄEV', weekly: 'NÄDAL', monthly: 'KUU' };
+const REPL = { daily: 'P\u00C4EV', weekly: 'N\u00C4DAL', monthly: 'KUU' };
 const nextRep = (d, r) => { if (r === 'daily') return addDays(d, 1); if (r === 'weekly') return addDays(d, 7); const x = new Date(utc(d)); x.setUTCMonth(x.getUTCMonth() + 1); return x.toISOString().slice(0, 10); };
 const chatOf = (t) => { try { return JSON.parse(t.chat || '[]'); } catch (e) { return []; } };
 let view = 'today', cal = { mode: 'list', y: 0, m: 0, sel: '' }, pending = null, net = 'idle';
@@ -166,7 +169,7 @@ function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e)
 const configured = () => S.cfg && S.cfg.url && S.cfg.token;
 const openTasks = () => S.tasks.filter((t) => !t.done && !t.deleted);
 
-/* ===== taustaosa kõned ===== */
+/* ===== taustaosa k\u00F5ned ===== */
 async function api(action, payload) {
   const r = await fetch(S.cfg.url, {
     method: 'POST',
@@ -175,7 +178,14 @@ async function api(action, payload) {
   });
   return r.json();
 }
+/* ===== katkise kodeering (\u00C3\u00BC -> \u00FC) parandus ===== */
+function fixMoji(s) {
+  if (typeof s !== 'string' || !/[\u00C2\u00C3]/.test(s)) return s;
+  try { return decodeURIComponent(escape(s)); } catch (e) { return s; }
+}
+function fixItem(o) { ['title', 'meta', 'waitFor', 'name', 'note', 'next', 'tag'].forEach((k) => { if (o[k]) { const f = fixMoji(o[k]); if (f !== o[k]) { o[k] = f; o.updated = Date.now(); } } }); return o; }
 function mergeInto(local, incoming) {
+  incoming = incoming.map(fixItem);
   const map = new Map(local.map((x) => [x.id, x]));
   incoming.forEach((it) => { const c = map.get(it.id); if (!c || Number(it.updated) > Number(c.updated)) map.set(it.id, it); });
   return [...map.values()];
@@ -199,7 +209,7 @@ async function sync() {
 }
 function stat() {
   const n = new Date();
-  const label = { idle: '', ok: ' · OK', sync: ' · SÜNKROON', off: ' · OFFLINE', cfg: ' · SEADED PUUDU' }[net] || '';
+  const label = { idle: '', ok: ' \u00B7 OK', sync: ' \u00B7 S\u00DCNKROON', off: ' \u00B7 OFFLINE', cfg: ' \u00B7 SEADED PUUDU' }[net] || '';
   $('#stat').textContent = WD[n.getDay()] + ' ' + pad(n.getDate()) + '.' + pad(n.getMonth() + 1) + label;
 }
 function changed() { save(); render(); scheduleSync(); }
@@ -216,7 +226,7 @@ const isWaiting = (t) => !!(t.waitFor && t.followUp && t.followUp > todayStr());
 function dropWaitEvent(t) { if (t.waitEvent && configured()) { const id = t.waitEvent; api('delevent', { id: id }).catch(() => {}); } t.waitEvent = ''; }
 function setDone(id) {
   const t = find(id); if (!t) return; dropWaitEvent(t); t.done = 1; t.doneAt = Date.now(); t.updated = t.doneAt;
-  if (t.repeat) { const td = todayStr(); let n = t.due || td; do { n = nextRep(n, t.repeat); } while (n <= td); toast('Kordub: järgmine ' + wdDm(n)); addTask({ title: t.title, meta: t.meta, due: n, tag: t.tag, repeat: t.repeat }); return; }
+  if (t.repeat) { const td = todayStr(); let n = t.due || td; do { n = nextRep(n, t.repeat); } while (n <= td); toast('Kordub: j\u00E4rgmine ' + wdDm(n)); addTask({ title: t.title, meta: t.meta, due: n, tag: t.tag, repeat: t.repeat }); return; }
   changed();
 }
 function snooze(id) { const t = find(id); if (!t) return; t.snooze = todayStr(); t.updated = Date.now(); changed(); }
@@ -231,13 +241,13 @@ function rank(t) {
 }
 function sorted() { return openTasks().filter((t) => !isWaiting(t) && (!S.filter || t.tag === S.filter)).sort((a, b) => rank(a) - rank(b) || a.created - b.created); }
 function tagOf(t) {
-  if (t.waitFor && t.followUp) return t.followUp <= todayStr() ? { txt: 'KÜSI UUESTI', inv: true } : { txt: 'JÄTK ' + dm(t.followUp), inv: false };
+  if (t.waitFor && t.followUp) return t.followUp <= todayStr() ? { txt: 'K\u00DCSI UUESTI', inv: true } : { txt: 'J\u00C4TK ' + dm(t.followUp), inv: false };
   if (t.due) {
     const d = dayDiff(t.due, todayStr());
-    if (d < 0) return { txt: 'MÖÖDAS', inv: true };
-    if (d === 0) return { txt: 'TÄNA', inv: true };
+    if (d < 0) return { txt: 'M\u00D6\u00D6DAS', inv: true };
+    if (d === 0) return { txt: 'T\u00C4NA', inv: true };
     if (d === 1) return { txt: 'HOMME', inv: false };
-    if (d <= 7) return { txt: d + ' PÄEVA', inv: false };
+    if (d <= 7) return { txt: d + ' P\u00C4EVA', inv: false };
     return { txt: dm(t.due), inv: false };
   }
   return t.tag ? { txt: t.tag, inv: false } : null;
@@ -248,8 +258,8 @@ function metaOf(t) {
   if (t.meta) bits.push(t.meta);
   if (t.due) bits.push(wdDm(t.due));
   if (t.tag && t.due) bits.push(t.tag);
-  if (t.repeat) bits.push('↻ ' + REPL[t.repeat]);
-  return bits.join(' · ');
+  if (t.repeat) bits.push('\u21BB ' + REPL[t.repeat]);
+  return bits.join(' \u00B7 ');
 }
 
 /* ===== projektid ===== */
@@ -260,7 +270,7 @@ function projUpdate(text) {
   if (key.length < 3) return null;
   const p = S.projects.find((x) => !x.deleted && (x.name.toLowerCase().includes(key) || (x.name.length > 2 && key.includes(x.name.toLowerCase()))));
   if (!p) return null;
-  const parts = m[2].split(/[,;.]?\s*järgmine(?:\s+samm)?\s*:?\s*/i);
+  const parts = m[2].split(/[,;.]?\s*j\u00E4rgmine(?:\s+samm)?\s*:?\s*/i);
   const a = (parts[0] || '').trim(), b = (parts[1] || '').trim();
   if (a) p.note = a;
   if (b) p.next = b;
@@ -310,31 +320,31 @@ function dayMap(from, to) {
   return map;
 }
 function evRows(day) {
-  const rows = day.ev.map((e) => '<div class="ev" data-act="ev" data-id="' + esc(e.id) + '" style="cursor:pointer"><span class="tm">' + (e.allDay ? 'KOGU PÄEV' : esc(e.time)) + '</span><span class="ti">' + esc(emo(e.title)) + '</span></div>');
+  const rows = day.ev.map((e) => '<div class="ev" data-act="ev" data-id="' + esc(e.id) + '" style="cursor:pointer"><span class="tm">' + (e.allDay ? 'KOGU P\u00C4EV' : esc(e.time)) + '</span><span class="ti">' + esc(emo(e.title)) + '</span></div>');
   day.td.forEach((t) => rows.push('<div class="ev todo" data-act="task" data-id="' + t.id + '" style="cursor:pointer"><span class="tm">TODO</span><span class="ti">' + esc(emo(t.title)) + '</span></div>'));
   return rows.join('');
 }
 function calHTML() {
-  const seg = '<div class="seg"><button data-act="cmode" data-v="list" class="' + (cal.mode === 'list' ? 'on' : '') + '">JÄRJEST</button><button data-act="cmode" data-v="month" class="' + (cal.mode === 'month' ? 'on' : '') + '">KUU</button></div>';
-  const note = configured() ? '' : '<div class="ph">Kalendri nägemiseks pane Seadetes (puuduta pealkirja) Apps Scripti aadress ja token.</div>';
+  const seg = '<div class="seg"><button data-act="cmode" data-v="list" class="' + (cal.mode === 'list' ? 'on' : '') + '">J\u00C4RJEST</button><button data-act="cmode" data-v="month" class="' + (cal.mode === 'month' ? 'on' : '') + '">KUU</button></div>';
+  const note = configured() ? '' : '<div class="ph">Kalendri n\u00E4gemiseks pane Seadetes (puuduta pealkirja) Apps Scripti aadress ja token.</div>';
   if (cal.mode === 'list') {
     const t = todayStr(), to = addDays(t, 45), map = dayMap(t, to);
     let h = seg + note;
     const over = openTasks().filter((x) => !x.waitFor && x.due && x.due < t).sort((a, b) => a.due.localeCompare(b.due));
-    if (over.length) h += '<div class="dhead"><span>MÖÖDAS</span><span>' + over.length + '</span></div>' + over.map((x) => '<div class="ev todo" data-act="task" data-id="' + x.id + '" style="cursor:pointer"><span class="tm">' + dm(x.due) + '</span><span class="ti">' + esc(emo(x.title)) + '</span></div>').join('');
+    if (over.length) h += '<div class="dhead"><span>M\u00D6\u00D6DAS</span><span>' + over.length + '</span></div>' + over.map((x) => '<div class="ev todo" data-act="task" data-id="' + x.id + '" style="cursor:pointer"><span class="tm">' + dm(x.due) + '</span><span class="ti">' + esc(emo(x.title)) + '</span></div>').join('');
     const days = Object.keys(map).sort();
     days.forEach((d) => {
       const isT = d === t;
-      h += '<div class="dhead' + (isT ? ' t' : '') + '"><span>' + (isT ? 'TÄNA' : wdDm(d)) + '</span><span>' + (isT ? wdDm(d) : (dayDiff(d, t) === 1 ? 'HOMME' : dayDiff(d, t) + ' PÄEVA')) + '</span></div>' + evRows(map[d]);
+      h += '<div class="dhead' + (isT ? ' t' : '') + '"><span>' + (isT ? 'T\u00C4NA' : wdDm(d)) + '</span><span>' + (isT ? wdDm(d) : (dayDiff(d, t) === 1 ? 'HOMME' : dayDiff(d, t) + ' P\u00C4EVA')) + '</span></div>' + evRows(map[d]);
     });
-    if (!days.length && !over.length) h += '<div class="empty">Järgmise 45 päeva jooksul pole midagi.</div>';
+    if (!days.length && !over.length) h += '<div class="empty">J\u00E4rgmise 45 p\u00E4eva jooksul pole midagi.</div>';
     return h;
   }
   const r = isoMonthRange(cal.y, cal.m), map = dayMap(r.from, r.to), t = todayStr();
   const first = cal.y + '-' + pad(cal.m + 1) + '-01';
   const off = (wdOf(first) + 6) % 7, dim = new Date(Date.UTC(cal.y, cal.m + 1, 0)).getUTCDate();
   const total = Math.ceil((off + dim) / 7) * 7;
-  let h = seg + '<div class="mhead"><button data-act="mprev" aria-label="Eelmine kuu">&lt;</button><span class="nm">' + MONTHS[cal.m] + ' ' + cal.y + '</span><button data-act="mnext" aria-label="Järgmine kuu">&gt;</button></div><div class="grid">';
+  let h = seg + '<div class="mhead"><button data-act="mprev" aria-label="Eelmine kuu">&lt;</button><span class="nm">' + MONTHS[cal.m] + ' ' + cal.y + '</span><button data-act="mnext" aria-label="J\u00E4rgmine kuu">&gt;</button></div><div class="grid">';
   ['E', 'T', 'K', 'N', 'R', 'L', 'P'].forEach((w) => (h += '<div class="wd">' + w + '</div>'));
   for (let i = 0; i < total; i++) {
     const d = addDays(first, i - off), inM = d.slice(0, 7) === first.slice(0, 7), v = map[d];
@@ -344,7 +354,7 @@ function calHTML() {
   }
   h += '</div>';
   const sd = map[cal.sel] || { ev: [], td: [] };
-  h += '<div class="dhead"><span>' + wdDm(cal.sel) + '</span><span></span></div>' + (sd.ev.length || sd.td.length ? evRows(sd) : '<div class="ev"><span class="ti" style="color:var(--mut)">Tühi päev</span></div>');
+  h += '<div class="dhead"><span>' + wdDm(cal.sel) + '</span><span></span></div>' + (sd.ev.length || sd.td.length ? evRows(sd) : '<div class="ev"><span class="ti" style="color:var(--mut)">T\u00FChi p\u00E4ev</span></div>');
   return note + h;
 }
 
@@ -354,53 +364,53 @@ function chipsHTML() {
   const tags = Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 5);
   if (S.filter && tags.indexOf(S.filter) < 0) S.filter = '';
   if (!tags.length) return '';
-  return '<div class="chips"><button data-act="flt" data-v="" class="' + (S.filter ? '' : 'on') + '">KÕIK</button>' + tags.map((g) => '<button data-act="flt" data-v="' + esc(g) + '" class="' + (S.filter === g ? 'on' : '') + '">' + esc(g) + '</button>').join('') + '</div>';
+  return '<div class="chips"><button data-act="flt" data-v="" class="' + (S.filter ? '' : 'on') + '">K\u00D5IK</button>' + tags.map((g) => '<button data-act="flt" data-v="' + esc(g) + '" class="' + (S.filter === g ? 'on' : '') + '">' + esc(g) + '</button>').join('') + '</div>';
 }
 function silentHTML() {
   const now = Date.now();
   const l = S.projects.filter((p) => !p.deleted && now - (p.worked || p.updated) >= 14 * 864e5).sort((a, b) => (a.worked || a.updated) - (b.worked || b.updated)).slice(0, 2);
   let h = '';
-  if (l.length) h += '<div class="sec lab">VAIKIB</div>' + l.map((p) => '<div class="row" data-act="proj" data-id="' + p.id + '" style="cursor:pointer;align-items:center"><div class="rt"><b>' + esc(p.name) + '</b><span>' + (p.next ? 'JÄRGMINE: ' + esc(p.next) : 'Pole järgmist sammu') + '</span></div><span class="tag inv">' + Math.floor((now - (p.worked || p.updated)) / 864e5) + ' P</span></div>').join('');
+  if (l.length) h += '<div class="sec lab">VAIKIB</div>' + l.map((p) => '<div class="row" data-act="proj" data-id="' + p.id + '" style="cursor:pointer;align-items:center"><div class="rt"><b>' + esc(p.name) + '</b><span>' + (p.next ? 'J\u00C4RGMINE: ' + esc(p.next) : 'Pole j\u00E4rgmist sammu') + '</span></div><span class="tag inv">' + Math.floor((now - (p.worked || p.updated)) / 864e5) + ' P</span></div>').join('');
   return h + '<button class="btn dark" data-act="stale" style="width:100%;margin-top:16px;flex:none">MIS VENIB</button>';
 }
 function todayHTML() {
   const list = sorted();
-  if (!list.length) return chipsHTML() + '<div class="empty">Kõik tehtud.</div>' + waitHTML() + silentHTML();
+  if (!list.length) return chipsHTML() + '<div class="empty">K\u00F5ik tehtud.</div>' + waitHTML() + silentHTML();
   const h = list[0], rest = list.slice(1), td = todayStr();
   let lab = 'KOHE SEE';
-  if (h.waitFor && h.followUp) lab = 'KÜSI UUESTI · ' + h.waitFor.toUpperCase(); else if (h.due) { const d = dayDiff(h.due, td); lab = d < 0 ? 'KOHE SEE · MÖÖDAS ' + -d + ' PÄEVA' : d === 0 ? 'KOHE SEE · TÄNA' : 'JÄRGMINE · ' + wdDm(h.due); }
+  if (h.waitFor && h.followUp) lab = 'K\u00DCSI UUESTI \u00B7 ' + h.waitFor.toUpperCase(); else if (h.due) { const d = dayDiff(h.due, td); lab = d < 0 ? 'KOHE SEE \u00B7 M\u00D6\u00D6DAS ' + -d + ' P\u00C4EVA' : d === 0 ? 'KOHE SEE \u00B7 T\u00C4NA' : 'J\u00C4RGMINE \u00B7 ' + wdDm(h.due); }
   let html = chipsHTML() + '<div class="hero"><span class="lab">' + esc(lab) + '</span><h2 data-act="task" data-id="' + h.id + '" style="cursor:pointer">' + esc(emo(h.title)) + '</h2>' + (h.meta ? '<p>' + esc(h.meta) + '</p>' : '') +
     '<div class="btns"><button class="btn pri" data-act="done" data-id="' + h.id + '">' + (h.waitFor ? 'SAIN VASTUSE' : 'TEHTUD') + '</button><button class="btn" data-act="waitform" data-id="' + h.id + '">OOTAN</button><button class="btn" data-act="snooze" data-id="' + h.id + '">HILJEM</button></div></div>';
-  html += '<div class="sec lab">JÄRGMISED · ' + rest.length + '</div>';
+  html += '<div class="sec lab">J\u00C4RGMISED \u00B7 ' + rest.length + '</div>';
   html += rest.map((t) => {
     const g = tagOf(t), m = metaOf(t);
-    return '<div class="row"><button class="chk" aria-label="Märgi tehtud" data-act="done" data-id="' + t.id + '"></button><div class="rt" data-act="task" data-id="' + t.id + '"><b>' + esc(emo(t.title)) + '</b>' + (m ? '<span>' + esc(m) + '</span>' : '') + '</div>' + (g ? '<span class="tag' + (g.inv ? ' inv' : '') + '">' + esc(g.txt) + '</span>' : '') + '</div>';
+    return '<div class="row"><button class="chk" aria-label="M\u00E4rgi tehtud" data-act="done" data-id="' + t.id + '"></button><div class="rt" data-act="task" data-id="' + t.id + '"><b>' + esc(emo(t.title)) + '</b>' + (m ? '<span>' + esc(m) + '</span>' : '') + '</div>' + (g ? '<span class="tag' + (g.inv ? ' inv' : '') + '">' + esc(g.txt) + '</span>' : '') + '</div>';
   }).join('');
   return html + waitHTML() + silentHTML();
 }
 function waitHTML() {
   const w = openTasks().filter(isWaiting).sort((a, b) => a.followUp.localeCompare(b.followUp));
   if (!w.length) return '';
-  return '<div class="sec lab">OOTAN · ' + w.length + '</div>' + w.map((t) => '<div class="row" data-act="task" data-id="' + t.id + '" style="cursor:pointer"><div class="rt"><b>' + esc(emo(t.title)) + '</b><span>Ootan: ' + esc(t.waitFor) + '</span></div><span class="tag">JÄTK ' + dm(t.followUp) + '</span></div>').join('');
+  return '<div class="sec lab">OOTAN \u00B7 ' + w.length + '</div>' + w.map((t) => '<div class="row" data-act="task" data-id="' + t.id + '" style="cursor:pointer"><div class="rt"><b>' + esc(emo(t.title)) + '</b><span>Ootan: ' + esc(t.waitFor) + '</span></div><span class="tag">J\u00C4TK ' + dm(t.followUp) + '</span></div>').join('');
 }
 function projHTML() {
   const now = Date.now();
   const list = S.projects.filter((p) => !p.deleted).sort((a, b) => (b.worked || b.updated) - (a.worked || a.updated));
-  return '<div class="sec lab" style="display:flex;justify-content:space-between"><span>PROJEKTID · ' + list.length + '</span><span>PÄEVI VAIKUST</span></div>' + list.map((p) => {
+  return '<div class="sec lab" style="display:flex;justify-content:space-between"><span>PROJEKTID \u00B7 ' + list.length + '</span><span>P\u00C4EVI VAIKUST</span></div>' + list.map((p) => {
     const days = Math.max(0, Math.floor((now - (p.worked || p.updated)) / 864e5)), stale = days >= 14;
-    return '<div class="row" data-act="proj" data-id="' + p.id + '" style="align-items:center;cursor:pointer"><div class="rt"><b>' + esc(p.name) + '</b><span style="font-size:20px;font-family:VT323,monospace;color:var(--mut);margin-top:4px">' + esc(p.note) + '</span><span style="color:var(--ink)">' + (p.next ? 'JÄRGMINE: ' + esc(p.next) : 'JÄRGMINE: [PANE SIIA]') + '</span></div><div class="tag' + (stale ? ' inv' : '') + '" style="width:54px;text-align:center;font-family:VT323,monospace;font-size:32px;line-height:1;padding:6px 0">' + days + '</div></div>';
-  }).join('') + '<button class="btn dark" data-act="projnew" style="width:100%;margin-top:16px;flex:none">+ LISA PROJEKT</button><div class="lab" style="padding-top:14px">Puuduta projekti, et muuta või kustutada. Kiire uuendus alumisse välja: <b>Rahaasjad: tegin X, järgmine Y</b></div>';
+    return '<div class="row" data-act="proj" data-id="' + p.id + '" style="align-items:center;cursor:pointer"><div class="rt"><b>' + esc(p.name) + '</b><span style="font-size:20px;font-family:VT323,monospace;color:var(--mut);margin-top:4px">' + esc(p.note) + '</span><span style="color:var(--ink)">' + (p.next ? 'J\u00C4RGMINE: ' + esc(p.next) : 'J\u00C4RGMINE: [PANE SIIA]') + '</span></div><div class="tag' + (stale ? ' inv' : '') + '" style="width:54px;text-align:center;font-family:VT323,monospace;font-size:32px;line-height:1;padding:6px 0">' + days + '</div></div>';
+  }).join('') + '<button class="btn dark" data-act="projnew" style="width:100%;margin-top:16px;flex:none">+ LISA PROJEKT</button><div class="lab" style="padding-top:14px">Puuduta projekti, et muuta v\u00F5i kustutada. Kiire uuendus alumisse v\u00E4lja: <b>Rahaasjad: tegin X, j\u00E4rgmine Y</b></div>';
 }
 let gm = { q: '', items: null, busy: false };
 function resHTML() {
   const u = S.usage;
   let h = '<div class="sec lab">UURINGUD</div>';
   const l = S.tasks.filter((t) => !t.deleted && (chatOf(t).length || (!t.done && /^\P{L}*uuri/iu.test(t.title)))).sort((a, b) => b.updated - a.updated);
-  h += l.length ? l.map((t) => '<div class="row" data-act="res" data-id="' + t.id + '" style="cursor:pointer;align-items:center"><div class="rt"><b>' + esc(t.title) + '</b><span>' + (chatOf(t).length ? chatOf(t).length / 2 + ' küsimust' : 'Vajuta, et uurida') + '</span></div><span class="tag">' + (t.done ? 'TEHTUD' : 'UURI') + '</span></div>').join('') : '<div class="ph" style="padding:16px 0;font-size:22px">Ava mõni ToDo ja vajuta UURI, või kirjuta alla "uuri ..." ning ava see siit.</div>';
-  h += '<div class="sec lab">POSTKAST · AINULT LUGEMINE</div><form id="gmForm" style="display:flex;gap:10px;margin-top:6px"><input class="inp" id="gq" type="text" placeholder="nt from:triin exceli" value="' + esc(gm.q) + '" style="flex:1;min-width:0"><button class="btn dark pri" style="flex:none;width:80px;height:48px">OTSI</button></form>';
+  h += l.length ? l.map((t) => '<div class="row" data-act="res" data-id="' + t.id + '" style="cursor:pointer;align-items:center"><div class="rt"><b>' + esc(t.title) + '</b><span>' + (chatOf(t).length ? chatOf(t).length / 2 + ' k\u00FCsimust' : 'Vajuta, et uurida') + '</span></div><span class="tag">' + (t.done ? 'TEHTUD' : 'UURI') + '</span></div>').join('') : '<div class="ph" style="padding:16px 0;font-size:22px">Ava m\u00F5ni ToDo ja vajuta UURI, v\u00F5i kirjuta alla "uuri ..." ning ava see siit.</div>';
+  h += '<div class="sec lab">POSTKAST \u00B7 AINULT LUGEMINE</div><form id="gmForm" style="display:flex;gap:10px;margin-top:6px"><input class="inp" id="gq" type="text" placeholder="nt from:triin exceli" value="' + esc(gm.q) + '" style="flex:1;min-width:0"><button class="btn dark pri" style="flex:none;width:80px;height:48px">OTSI</button></form>';
   if (gm.busy) h += '<div class="ph" style="padding:16px 0">Otsin...</div>';
-  else if (gm.items) h += gm.items.length ? gm.items.map((m) => '<a class="row" href="' + esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:none"><div class="rt"><b style="font-size:22px">' + esc(m.subject) + '</b><span>' + esc(m.from) + ' · ' + esc(m.date) + '</span><span style="color:var(--ink)">' + esc(m.snippet) + '</span></div></a>').join('') : '<div class="ph" style="padding:16px 0">Midagi ei leidnud.</div>';
-  h += '<div class="sec lab">KULU SEL KUUL</div><div class="ev"><span class="ti" style="font-size:22px">' + (u ? u.searches + ' / ' + u.cap + ' veebiotsingut · ca $' + u.usd.toFixed(2) : 'selgub pärast esimest sünkroonimist') + '</span></div><div class="lab" style="padding-top:8px">Piir tuleb Script propertyst SEARCH_CAP (vaikimisi 100). Täis piiri korral vastab Haiku ilma veebiotsinguta.</div>';
+  else if (gm.items) h += gm.items.length ? gm.items.map((m) => '<a class="row" href="' + esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:none"><div class="rt"><b style="font-size:22px">' + esc(m.subject) + '</b><span>' + esc(m.from) + ' \u00B7 ' + esc(m.date) + '</span><span style="color:var(--ink)">' + esc(m.snippet) + '</span></div></a>').join('') : '<div class="ph" style="padding:16px 0">Midagi ei leidnud.</div>';
+  h += '<div class="sec lab">KULU SEL KUUL</div><div class="ev"><span class="ti" style="font-size:22px">' + (u ? u.searches + ' / ' + u.cap + ' veebiotsingut \u00B7 ca $' + u.usd.toFixed(2) : 'selgub p\u00E4rast esimest s\u00FCnkroonimist') + '</span></div><div class="lab" style="padding-top:8px">Piir tuleb Script propertyst SEARCH_CAP (vaikimisi 100). T\u00E4is piiri korral vastab Haiku ilma veebiotsinguta.</div>';
   return h;
 }
 async function gmailSearch() {
@@ -420,17 +430,17 @@ function render() {
   stat();
 }
 
-/* ===== kohalik lugeja (kui AI ei vasta): kuupäev ja kellaaeg tekstist ===== */
+/* ===== kohalik lugeja (kui AI ei vasta): kuup\u00E4ev ja kellaaeg tekstist ===== */
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 function localParse(text) {
   const td = todayStr(), low = text.toLowerCase();
-  const A = '[a-zäöõü]';
+  const A = '[a-z\u00E4\u00F6\u00F5\u00FC]';
   let date = '', dayRe = null, m;
-  if ((m = low.match(new RegExp('(?<!' + A + ')ülehomme(?!' + A + ')')))) { date = addDays(td, 2); dayRe = m[0]; }
+  if ((m = low.match(new RegExp('(?<!' + A + ')\u00FClehomme(?!' + A + ')')))) { date = addDays(td, 2); dayRe = m[0]; }
   else if ((m = low.match(new RegExp('(?<!' + A + ')homme(?!' + A + ')')))) { date = addDays(td, 1); dayRe = m[0]; }
-  else if ((m = low.match(new RegExp('(?<!' + A + ')täna(?!' + A + ')')))) { date = td; dayRe = m[0]; }
-  else if ((m = low.match(new RegExp('(?<!' + A + ')(esmasp|teisip|kolmap|neljap|reede|laup|pühap)' + A + '*')))) {
-    const map = { esmasp: 1, teisip: 2, kolmap: 3, neljap: 4, reede: 5, laup: 6, pühap: 0 };
+  else if ((m = low.match(new RegExp('(?<!' + A + ')t\u00E4na(?!' + A + ')')))) { date = td; dayRe = m[0]; }
+  else if ((m = low.match(new RegExp('(?<!' + A + ')(esmasp|teisip|kolmap|neljap|reede|laup|p\u00FChap)' + A + '*')))) {
+    const map = { esmasp: 1, teisip: 2, kolmap: 3, neljap: 4, reede: 5, laup: 6, p\u00FChap: 0 };
     let n = (map[m[1]] - wdOf(td) + 7) % 7; if (n === 0) n = 7;
     date = addDays(td, n); dayRe = m[0];
   } else if ((m = low.match(/(?<!\d)(\d{1,2})\.(\d{1,2})(?:\.(\d{2,4}))?(?!\d)/))) {
@@ -452,7 +462,7 @@ function localParse(text) {
   else if ((t = low.match(new RegExp(esc2(dayRe) + '\\s+(\\d{1,2})(?![\\d.:])')))) { time = pad(+t[1]) + ':00'; rest = rest.replace(new RegExp(esc2(dayRe) + '\\s+' + t[1], 'i'), ' '); }
   if (time && +time.slice(0, 2) > 23) return null;
   rest = rest.replace(dayPat, ' ');
-  const parts = rest.split(/[,;]/).map((x) => x.replace(/^[\s\-–:]+|[\s\-–:]+$/g, '').replace(/\s+/g, ' ')).filter(Boolean);
+  const parts = rest.split(/[,;]/).map((x) => x.replace(/^[\s\-\u2013:]+|[\s\-\u2013:]+$/g, '').replace(/\s+/g, ' ')).filter(Boolean);
   if (!parts.length) parts.push(text.trim());
   const events = [{ title: cap(parts[0]), date: date, time: time || null, durationMin: 60, remindersMin: time ? [1440, 60] : [900] }];
   const tasks = parts.length > 1 ? [{ title: cap(parts.slice(1).join(', ')), due: date, note: '', waitFor: '', followUp: '' }] : [];
@@ -461,12 +471,12 @@ function localParse(text) {
 
 /* ===== vabatekst -> kinnitus ===== */
 function evLine(e, i) {
-  const rem = (e.remindersMin || []).map((m) => (m % 1440 === 0 ? m / 1440 + ' PÄEV' : m % 60 === 0 ? m / 60 + ' TUND' : m + ' MIN') + ' ENNE').join(' + ');
-  return '<div class="item" style="' + (e.skip ? 'opacity:.4' : '') + '"><button class="chk' + (e.skip ? '' : ' on') + '" data-act="tog" data-k="e' + i + '" aria-label="Kaasa"></button><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">KALENDER</span><span class="big">' + esc(e.title) + '</span><span class="mid">' + wdDm(e.date) + ' · ' + (e.time ? 'kell ' + esc(e.time) : 'terve päev') + '</span>' + (rem ? '<span class="lab">POPUP: ' + rem + '</span>' : '') + '</div></div>';
+  const rem = (e.remindersMin || []).map((m) => (m % 1440 === 0 ? m / 1440 + ' P\u00C4EV' : m % 60 === 0 ? m / 60 + ' TUND' : m + ' MIN') + ' ENNE').join(' + ');
+  return '<div class="item" style="' + (e.skip ? 'opacity:.4' : '') + '"><button class="chk' + (e.skip ? '' : ' on') + '" data-act="tog" data-k="e' + i + '" aria-label="Kaasa"></button><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">KALENDER</span><span class="big">' + esc(e.title) + '</span><span class="mid">' + wdDm(e.date) + ' \u00B7 ' + (e.time ? 'kell ' + esc(e.time) : 'terve p\u00E4ev') + '</span>' + (rem ? '<span class="lab">POPUP: ' + rem + '</span>' : '') + '</div></div>';
 }
 function showConfirm(text, res, skipUI) {
   const evs = (res.events || []).map((e) => Object.assign({}, e, { title: emo(e.title), skip: false })), tks = (res.tasks || []).map((t) => Object.assign({}, t, { title: emo(t.title), skip: false }, t.waitFor && !t.followUp ? { followUp: addDays(todayStr(), 3) } : {}));
-  tks.forEach((t, i) => { if (t.waitFor && t.followUp) evs.push({ title: '⏳ Küsi uuesti: ' + t.waitFor + ' (' + t.title + ')', date: t.followUp, time: '10:00', durationMin: 15, remindersMin: [0], follow: true, ti: i }); });
+  tks.forEach((t, i) => { if (t.waitFor && t.followUp) evs.push({ title: '\u23F3 K\u00FCsi uuesti: ' + t.waitFor + ' (' + t.title + ')', date: t.followUp, time: '10:00', durationMin: 15, remindersMin: [0], follow: true, ti: i }); });
   pending = { text: text, events: evs, tasks: tks, note: res.note || '' };
   if (skipUI) return;
   renderConfirm();
@@ -475,12 +485,12 @@ function renderConfirm() {
   const p = pending;
   const none = !p.events.length && !p.tasks.length;
   let h = '<div class="sheet"><header><h1>Assistent</h1><span class="lab">VABATEKST KALENDRISSE</span></header><div class="rule"></div><div class="body">' +
-    '<div class="field"><span class="lab">SINA</span><div class="said">' + esc(p.text) + '</div></div>' + (p.note ? '<div class="lab" style="color:var(--ink)">' + esc(p.note) + '</div>' : '') + '<div><span class="lab">ASSISTENT LOEB ÄRA</span>';
+    '<div class="field"><span class="lab">SINA</span><div class="said">' + esc(p.text) + '</div></div>' + (p.note ? '<div class="lab" style="color:var(--ink)">' + esc(p.note) + '</div>' : '') + '<div><span class="lab">ASSISTENT LOEB \u00C4RA</span>';
   h += p.events.filter((e) => !e.follow).map((e) => evLine(e, p.events.indexOf(e))).join('');
-  h += p.tasks.map((t, i) => '<div class="item" style="' + (t.skip ? 'opacity:.4' : '') + '"><button class="chk' + (t.skip ? '' : ' on') + '" data-act="tog" data-k="t' + i + '" aria-label="Kaasa" style="margin-top:3px"></button><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">TODO' + (t.repeat ? ' · KORDUB ' + REPL[t.repeat] : '') + (t.tag ? ' · ' + esc(t.tag) : '') + '</span><span class="big" style="font-size:28px">' + esc(t.title) + '</span>' + (t.waitFor && t.followUp ? '<span class="lab">OOTAN: ' + esc(t.waitFor) + ' · KÜSI UUESTI ' + wdDm(t.followUp) + '</span>' : t.due ? '<span class="lab">TÄHTAEG ' + wdDm(t.due) + ' · KINNITAMATA = TEGEMATA</span>' : '') + '</div></div>').join('');
+  h += p.tasks.map((t, i) => '<div class="item" style="' + (t.skip ? 'opacity:.4' : '') + '"><button class="chk' + (t.skip ? '' : ' on') + '" data-act="tog" data-k="t' + i + '" aria-label="Kaasa" style="margin-top:3px"></button><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">TODO' + (t.repeat ? ' \u00B7 KORDUB ' + REPL[t.repeat] : '') + (t.tag ? ' \u00B7 ' + esc(t.tag) : '') + '</span><span class="big" style="font-size:28px">' + esc(t.title) + '</span>' + (t.waitFor && t.followUp ? '<span class="lab">OOTAN: ' + esc(t.waitFor) + ' \u00B7 K\u00DCSI UUESTI ' + wdDm(t.followUp) + '</span>' : t.due ? '<span class="lab">T\u00C4HTAEG ' + wdDm(t.due) + ' \u00B7 KINNITAMATA = TEGEMATA</span>' : '') + '</div></div>').join('');
   if (none) h += '<div class="ph">Ei leidnud midagi kalendrisse ega ToDo-sse.</div>';
   h += '</div><div class="btns">' + (none ? '<button class="btn big dark pri" data-act="plain">LISA TAVALISE TODO-NA</button>' : '<button class="btn big dark pri" data-act="confirm">KINNITA</button>') + '<button class="btn big dark" data-act="edit" style="flex:1">MUUDA</button></div>' +
-    '<div class="lab">AI KULU: 1 LÜHIKE PÄRING. UURING JOOKSEB AINULT SIIS, KUI VAJUTAD UURI.</div></div></div>';
+    '<div class="lab">AI KULU: 1 L\u00DCHIKE P\u00C4RING. UURING JOOKSEB AINULT SIIS, KUI VAJUTAD UURI.</div></div></div>';
   $('#overlay').innerHTML = h;
 }
 const closeOverlay = () => { $('#overlay').innerHTML = ''; pending = null; };
@@ -522,7 +532,7 @@ async function submit() {
   const pu = projUpdate(text);
   if (pu) { inp.value = ''; toast('Projekt uuendatud: ' + pu.name); return; }
   if (!configured()) { addTask({ title: text }); inp.value = ''; toast('Lisatud ToDo-sse (seaded puudu, AI-d ei kasutatud)'); return; }
-  inp.disabled = true; inp.placeholder = 'Loen ära...';
+  inp.disabled = true; inp.placeholder = 'Loen \u00E4ra...';
   try {
     const res = await api('parse', { text: text, today: todayStr() });
     if (!res.ok) throw new Error(res.error);
@@ -531,10 +541,10 @@ async function submit() {
     if (S.cfg.auto && any) await confirmPending({ disabled: false, textContent: '' });
   } catch (e) {
     const lp = localParse(text), why = String((e && e.message) || e).slice(0, 120);
-    if (lp) { lp.note = 'AI ei vastanud (' + why + '). Lugesin ise, vaata üle.'; showConfirm(text, lp); }
+    if (lp) { lp.note = 'AI ei vastanud (' + why + '). Lugesin ise, vaata \u00FCle.'; showConfirm(text, lp); }
     else { addTask({ title: text }); inp.value = ''; toast('AI ei vastanud (' + why + '). Lisasin tavalise ToDo-na', 7000); }
   }
-  inp.disabled = false; inp.placeholder = 'Kirjuta või dikteeri...';
+  inp.disabled = false; inp.placeholder = 'Kirjuta v\u00F5i dikteeri...';
 }
 
 /* ===== asja leht ja ootamine ===== */
@@ -545,17 +555,17 @@ function showTask(id) {
   const t = find(id); if (!t) return;
   editRep = t.repeat || '';
   const w = !!t.waitFor;
-  const rb = [['', 'EI'], ['daily', 'PÄEV'], ['weekly', 'NÄDAL'], ['monthly', 'KUU']].map((x) => '<button data-act="rep" data-v="' + x[0] + '" class="' + (editRep === x[0] ? 'on' : '') + '">' + x[1] + '</button>').join('');
+  const rb = [['', 'EI'], ['daily', 'P\u00C4EV'], ['weekly', 'N\u00C4DAL'], ['monthly', 'KUU']].map((x) => '<button data-act="rep" data-v="' + x[0] + '" class="' + (editRep === x[0] ? 'on' : '') + '">' + x[1] + '</button>').join('');
   const nch = chatOf(t).length / 2;
   $('#overlay').innerHTML = sheetHead('ASI') +
     '<div class="field"><label class="lab" for="tt">PEALKIRI</label><input id="tt" type="text" value="' + esc(t.title) + '"></div>' +
-    (t.meta ? '<div class="lab">' + esc(t.meta) + '</div>' : '') + (w ? '<div class="lab">OOTAN: ' + esc(t.waitFor) + ' · KÜSI UUESTI ' + wdDm(t.followUp) + '</div>' : '') +
-    '<div class="field"><label class="lab" for="td">TÄHTAEG</label><div style="display:flex;gap:10px"><input id="td" type="date" value="' + esc(t.due) + '" style="flex:1;min-width:0"><button class="btn dark" data-act="dclear" style="flex:none;width:90px;height:48px">TÜHJA</button></div></div>' +
-    '<div class="field"><label class="lab" for="tg">SILT (nt TÖÖ, KODU, PROJEKT)</label><input id="tg" type="text" value="' + esc(t.tag) + '"></div>' +
+    (t.meta ? '<div class="lab">' + esc(t.meta) + '</div>' : '') + (w ? '<div class="lab">OOTAN: ' + esc(t.waitFor) + ' \u00B7 K\u00DCSI UUESTI ' + wdDm(t.followUp) + '</div>' : '') +
+    '<div class="field"><label class="lab" for="td">T\u00C4HTAEG</label><div style="display:flex;gap:10px"><input id="td" type="date" value="' + esc(t.due) + '" style="flex:1;min-width:0"><button class="btn dark" data-act="dclear" style="flex:none;width:90px;height:48px">T\u00DCHJA</button></div></div>' +
+    '<div class="field"><label class="lab" for="tg">SILT (nt T\u00D6\u00D6, KODU, PROJEKT)</label><input id="tg" type="text" value="' + esc(t.tag) + '"></div>' +
     '<div class="field"><span class="lab">KORDUB</span><div class="seg" style="margin:0">' + rb + '</div></div>' +
     '<div class="btns"><button class="btn big dark pri" data-act="tasksave" data-id="' + t.id + '">SALVESTA</button><button class="btn big dark" data-act="done" data-id="' + t.id + '" style="flex:1">' + (w ? 'SAIN VASTUSE' : 'TEHTUD') + '</button></div>' +
-    '<div class="btns"><button class="btn big dark" data-act="res" data-id="' + t.id + '">UURI' + (nch ? ' (' + nch + ')' : '') + '</button><button class="btn big dark" data-act="break" data-id="' + t.id + '">TÜKELDA</button></div>' +
-    '<div class="btns"><button class="btn big dark" data-act="waitform" data-id="' + t.id + '">' + (w ? 'UUS JÄTK' : 'OOTAN') + '</button><button class="btn big dark" data-act="snooze" data-id="' + t.id + '">HILJEM</button><button class="btn big dark" data-act="del" data-id="' + t.id + '">KUSTUTA</button></div></div></div>';
+    '<div class="btns"><button class="btn big dark" data-act="res" data-id="' + t.id + '">UURI' + (nch ? ' (' + nch + ')' : '') + '</button><button class="btn big dark" data-act="break" data-id="' + t.id + '">T\u00DCKELDA</button></div>' +
+    '<div class="btns"><button class="btn big dark" data-act="waitform" data-id="' + t.id + '">' + (w ? 'UUS J\u00C4TK' : 'OOTAN') + '</button><button class="btn big dark" data-act="snooze" data-id="' + t.id + '">HILJEM</button><button class="btn big dark" data-act="del" data-id="' + t.id + '">KUSTUTA</button></div></div></div>';
 }
 function saveTask(id) {
   const t = find(id); if (!t) return;
@@ -565,14 +575,14 @@ function saveTask(id) {
   t.updated = Date.now(); closeOverlay(); changed();
 }
 
-/* ===== UURI: väike vestlus ToDo juures ===== */
+/* ===== UURI: v\u00E4ike vestlus ToDo juures ===== */
 function showRes(id) {
   const t = find(id); if (!t) return;
   const ch = chatOf(t);
-  const log = ch.map((m) => m.r === 'u' ? '<div class="said" style="font-size:22px">' + esc(m.t) + '</div>' : '<div class="said a">' + esc(m.t) + (m.src || []).map((x) => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">↗ ' + esc(x.title) + '</a>').join('') + '</div>').join('');
+  const log = ch.map((m) => m.r === 'u' ? '<div class="said" style="font-size:22px">' + esc(m.t) + '</div>' : '<div class="said a">' + esc(m.t) + (m.src || []).map((x) => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">\u2197 ' + esc(x.title) + '</a>').join('') + '</div>').join('');
   $('#overlay').innerHTML = sheetHead('UURI') + '<div class="lab" style="color:var(--ink)">' + esc(t.title) + '</div>' + log +
-    '<form id="rForm" data-id="' + t.id + '" style="display:flex;gap:10px"><input class="inp" id="rq" type="text" placeholder="' + (ch.length ? 'Järgmine küsimus...' : 'Mida uurida?') + '" value="' + (ch.length ? '' : esc(t.title.replace(/^\P{L}*uuri\s*/iu, ''))) + '" style="flex:1;min-width:0"><button class="btn dark pri" style="flex:none;width:80px;height:48px" id="rgo">SAADA</button></form>' +
-    '<div class="lab">Iga küsimus maksab sendi-paar; veebiotsing max 3 korda päringu kohta.</div></div></div>';
+    '<form id="rForm" data-id="' + t.id + '" style="display:flex;gap:10px"><input class="inp" id="rq" type="text" placeholder="' + (ch.length ? 'J\u00E4rgmine k\u00FCsimus...' : 'Mida uurida?') + '" value="' + (ch.length ? '' : esc(t.title.replace(/^\P{L}*uuri\s*/iu, ''))) + '" style="flex:1;min-width:0"><button class="btn dark pri" style="flex:none;width:80px;height:48px" id="rgo">SAADA</button></form>' +
+    '<div class="lab">Iga k\u00FCsimus maksab sendi-paar; veebiotsing max 3 korda p\u00E4ringu kohta.</div></div></div>';
   const bd = document.querySelector('#overlay .body'); if (bd) bd.scrollTop = bd.scrollHeight;
 }
 async function sendRes(id) {
@@ -589,25 +599,25 @@ async function sendRes(id) {
     if (r.usage) S.usage = r.usage;
     if (r.note) toast(r.note, 7000);
     save(); scheduleSync();
-  } catch (e) { toast('Uurimine ei õnnestunud: ' + String((e && e.message) || e).slice(0, 120), 8000); }
+  } catch (e) { toast('Uurimine ei \u00F5nnestunud: ' + String((e && e.message) || e).slice(0, 120), 8000); }
   showRes(id);
 }
 
-/* ===== tükelda ===== */
+/* ===== t\u00FCkelda ===== */
 let brk = { id: '', steps: [] };
 async function doBreak(id) {
   const t = find(id); if (!t) return;
   if (!configured()) { toast('Seaded puudu'); return; }
-  toast('Tükeldan...', 30000);
+  toast('T\u00FCkeldan...', 30000);
   try {
     const r = await api('breakdown', { title: t.title, meta: t.meta });
-    if (!r.ok || !r.steps.length) throw new Error(r.error || 'tühi');
+    if (!r.ok || !r.steps.length) throw new Error(r.error || 't\u00FChi');
     brk = { id: id, steps: r.steps };
     $('#toast').hidden = true;
-    $('#overlay').innerHTML = sheetHead('TÜKELDA') + '<div class="said">' + esc(t.title) + '</div>' +
+    $('#overlay').innerHTML = sheetHead('T\u00DCKELDA') + '<div class="said">' + esc(t.title) + '</div>' +
       r.steps.map((x, i) => '<div class="item"><span class="lab" style="width:20px">' + (i + 1) + '</span><span class="mid" style="flex:1">' + esc(x) + '</span>' + (i === 0 ? '<span class="tag inv">5 MIN</span>' : '') + '</div>').join('') +
-      '<div class="btns"><button class="btn big dark pri" data-act="bfirst">ESIMENE SAMM TÄNA</button><button class="btn big dark" data-act="ball" style="flex:1">KÕIK TODO-DENA</button></div></div></div>';
-  } catch (e) { toast('Tükeldamine ei õnnestunud: ' + String((e && e.message) || e).slice(0, 100), 6000); }
+      '<div class="btns"><button class="btn big dark pri" data-act="bfirst">ESIMENE SAMM T\u00C4NA</button><button class="btn big dark" data-act="ball" style="flex:1">K\u00D5IK TODO-DENA</button></div></div></div>';
+  } catch (e) { toast('T\u00FCkeldamine ei \u00F5nnestunud: ' + String((e && e.message) || e).slice(0, 100), 6000); }
 }
 
 /* ===== mis venib ===== */
@@ -619,26 +629,26 @@ function showStale() {
   const pr = S.projects.filter((p) => !p.deleted && now - (p.worked || p.updated) >= 14 * 864e5).sort((a, b) => (a.worked || a.updated) - (b.worked || b.updated));
   const rows = (l, f) => l.map((t) => '<div class="row" data-act="task" data-id="' + t.id + '" style="cursor:pointer"><div class="rt"><b>' + esc(emo(t.title)) + '</b><span>' + f(t) + '</span></div></div>').join('');
   let h = sheetHead('MIS VENIB');
-  if (over.length) h += '<div class="lab" style="color:var(--ink)">MÖÖDAS · ' + over.length + '</div>' + rows(over, (t) => -dayDiff(t.due, td) + ' päeva mööda');
-  if (ask.length) h += '<div class="lab" style="color:var(--ink)">KÜSI UUESTI · ' + ask.length + '</div>' + rows(ask, (t) => 'Ootan: ' + esc(t.waitFor));
-  if (old.length) h += '<div class="lab" style="color:var(--ink)">ILMA TÄHTAJATA ÜLE 3 NÄDALA · ' + old.length + '</div>' + rows(old, (t) => Math.floor((now - t.created) / 864e5) + ' päeva vana');
-  if (pr.length) h += '<div class="lab" style="color:var(--ink)">VAIKIVAD PROJEKTID · ' + pr.length + '</div>' + pr.map((p) => '<div class="row" data-act="proj" data-id="' + p.id + '" style="cursor:pointer"><div class="rt"><b>' + esc(p.name) + '</b><span>' + Math.floor((now - (p.worked || p.updated)) / 864e5) + ' päeva vaikust' + (p.next ? ' · ' + esc(p.next) : '') + '</span></div></div>').join('');
+  if (over.length) h += '<div class="lab" style="color:var(--ink)">M\u00D6\u00D6DAS \u00B7 ' + over.length + '</div>' + rows(over, (t) => -dayDiff(t.due, td) + ' p\u00E4eva m\u00F6\u00F6da');
+  if (ask.length) h += '<div class="lab" style="color:var(--ink)">K\u00DCSI UUESTI \u00B7 ' + ask.length + '</div>' + rows(ask, (t) => 'Ootan: ' + esc(t.waitFor));
+  if (old.length) h += '<div class="lab" style="color:var(--ink)">ILMA T\u00C4HTAJATA \u00DCLE 3 N\u00C4DALA \u00B7 ' + old.length + '</div>' + rows(old, (t) => Math.floor((now - t.created) / 864e5) + ' p\u00E4eva vana');
+  if (pr.length) h += '<div class="lab" style="color:var(--ink)">VAIKIVAD PROJEKTID \u00B7 ' + pr.length + '</div>' + pr.map((p) => '<div class="row" data-act="proj" data-id="' + p.id + '" style="cursor:pointer"><div class="rt"><b>' + esc(p.name) + '</b><span>' + Math.floor((now - (p.worked || p.updated)) / 864e5) + ' p\u00E4eva vaikust' + (p.next ? ' \u00B7 ' + esc(p.next) : '') + '</span></div></div>').join('');
   if (!over.length && !ask.length && !old.length && !pr.length) h += '<div class="empty">Midagi ei veni.</div>';
   $('#overlay').innerHTML = h + '</div></div>';
 }
 
-/* ===== kalendrisündmus ===== */
+/* ===== kalendris\u00FCndmus ===== */
 function showEvent(id) {
   const e = S.events.find((x) => x.id === id); if (!e) return;
-  $('#overlay').innerHTML = sheetHead('SÜNDMUS') +
+  $('#overlay').innerHTML = sheetHead('S\u00DCNDMUS') +
     '<div class="field"><label class="lab" for="et">PEALKIRI</label><input id="et" type="text" value="' + esc(e.title) + '"></div>' +
-    '<div class="field"><label class="lab" for="ed">KUUPÄEV</label><input id="ed" type="date" value="' + esc(e.date) + '"></div>' +
-    '<div class="field"><label class="lab" for="eh">KELLAAEG (TÜHI = TERVE PÄEV)</label><input id="eh" type="time" value="' + esc(e.time || '') + '"></div>' +
+    '<div class="field"><label class="lab" for="ed">KUUP\u00C4EV</label><input id="ed" type="date" value="' + esc(e.date) + '"></div>' +
+    '<div class="field"><label class="lab" for="eh">KELLAAEG (T\u00DCHI = TERVE P\u00C4EV)</label><input id="eh" type="time" value="' + esc(e.time || '') + '"></div>' +
     '<div class="btns"><button class="btn big dark pri" data-act="evsave" data-id="' + esc(e.id) + '">SALVESTA</button><button class="btn big dark" data-act="evdel" data-id="' + esc(e.id) + '" style="flex:1">KUSTUTA</button></div></div></div>';
 }
 async function saveEvent(id) {
   const title = ($('#et').value || '').trim(), date = $('#ed').value, time = $('#eh').value;
-  if (!title || !date) { toast('Pealkiri ja kuupäev on vajalikud'); return; }
+  if (!title || !date) { toast('Pealkiri ja kuup\u00E4ev on vajalikud'); return; }
   toast('Salvestan...', 20000);
   try { const r = await api('updevent', { id: id, title: title, date: date, time: time }); if (!r.ok) throw new Error(r.error); closeOverlay(); toast('Salvestatud'); loadEvents(true); }
   catch (e) { toast('Ei saanud: ' + String((e && e.message) || e).slice(0, 100), 6000); }
@@ -648,26 +658,40 @@ async function delEvent(id) {
   catch (e) { toast('Ei saanud: ' + String((e && e.message) || e).slice(0, 100), 6000); }
 }
 async function emojiAll() {
-  S.tasks.forEach((t) => { if (!t.deleted && !t.done) { const n = emo(t.title); if (n !== t.title) { t.title = n; t.updated = Date.now(); } } });
-  changed();
-  if (!configured()) { toast('ToDo-dele lisatud. Kalender vajab seadeid.'); return; }
-  toast('Lisan kalendrisse emojisid...', 120000);
+  if (!configured()) { toast('Seaded puudu'); return; }
+  toast('Lisan emojid...', 120000);
   try {
-    const t = todayStr(), r = await api('events', { from: t, to: addDays(t, 90) });
-    if (!r.ok) throw new Error(r.error);
-    let n = 0;
-    for (const e of r.events) { const nt = emo(e.title); if (nt !== e.title) { const x = await api('updevent', { id: e.id, title: nt }); if (x.ok) n++; } }
-    S.evAt = 0; loadEvents(true); toast('Emojid lisatud: ' + n + ' kalendrisündmusele');
-  } catch (e) { toast('Kalender: ' + String((e && e.message) || e).slice(0, 100), 6000); }
+    const t0 = todayStr(), er = await api('events', { from: addDays(t0, -30), to: addDays(t0, 90) });
+    if (!er.ok) throw new Error(er.error);
+    const noEmo = (s) => !/^\p{Extended_Pictographic}/u.test(String(s || '')) && String(s || '').charAt(0) !== '\u25B8';
+    const items = [];
+    S.tasks.filter((t) => !t.deleted && !t.done && noEmo(t.title)).forEach((t) => items.push({ k: 't', ref: t, title: t.title }));
+    er.events.filter((e) => noEmo(e.title)).forEach((e) => items.push({ k: 'e', ref: e, title: e.title }));
+    items.forEach((it) => { const n = emo(it.title); it.emo = n !== it.title ? n.slice(0, n.length - it.title.length - 1) : ''; });
+    const miss = items.filter((it) => !it.emo);
+    for (let i = 0; i < miss.length; i += 60) {
+      const ch = miss.slice(i, i + 60), r = await api('emojis', { titles: ch.map((c) => c.title) });
+      if (r.ok) ch.forEach((c, j) => { c.emo = r.emojis[j] || ''; });
+    }
+    const now = Date.now(), evs = []; let nt = 0;
+    items.forEach((it) => {
+      if (!it.emo) return;
+      if (it.k === 't') { it.ref.title = it.emo + ' ' + it.ref.title; it.ref.updated = now; nt++; }
+      else evs.push({ id: it.ref.id, title: it.emo + ' ' + it.ref.title });
+    });
+    for (let i = 0; i < evs.length; i += 60) { const r = await api('updtitles', { items: evs.slice(i, i + 60) }); if (!r.ok) throw new Error(r.error); }
+    S.evAt = 0; changed(); loadEvents(true);
+    toast('Emojid lisatud: ' + nt + ' ToDo-le, ' + evs.length + ' kalendris\u00FCndmusele', 6000);
+  } catch (e) { toast('Emojid ei \u00F5nnestunud: ' + String((e && e.message) || e).slice(0, 110) + ' (kas uus Code.gs on deploy\'tud?)', 9000); }
 }
 
 function showWait(id) {
   const t = find(id); if (!t) return;
   waitDays = 3;
   $('#overlay').innerHTML = sheetHead('OOTAN') + '<div class="said">' + esc(t.title) + '</div>' +
-    '<div class="field"><label class="lab" for="wf">KELLE VÕI MILLE VASTUST OOTAD?</label><input id="wf" type="text" value="' + esc(t.waitFor || '') + '" placeholder="nt Triin"></div>' +
-    '<div class="field"><span class="lab">KÜSI UUESTI PÄEVA PÄRAST</span><div class="seg" style="margin:0">' + [1, 3, 7, 14].map((n) => '<button data-act="wdays" data-n="' + n + '" class="' + (n === 3 ? 'on' : '') + '">' + n + '</button>').join('') + '</div></div>' +
-    '<div class="btns"><button class="btn big dark pri" data-act="waitsave" data-id="' + t.id + '">SALVESTA</button></div><div class="lab">Kalendrisse tekib sel päeval kell 10:00 meeldetuletus.</div></div></div>';
+    '<div class="field"><label class="lab" for="wf">KELLE V\u00D5I MILLE VASTUST OOTAD?</label><input id="wf" type="text" value="' + esc(t.waitFor || '') + '" placeholder="nt Triin"></div>' +
+    '<div class="field"><span class="lab">K\u00DCSI UUESTI P\u00C4EVA P\u00C4RAST</span><div class="seg" style="margin:0">' + [1, 3, 7, 14].map((n) => '<button data-act="wdays" data-n="' + n + '" class="' + (n === 3 ? 'on' : '') + '">' + n + '</button>').join('') + '</div></div>' +
+    '<div class="btns"><button class="btn big dark pri" data-act="waitsave" data-id="' + t.id + '">SALVESTA</button></div><div class="lab">Kalendrisse tekib sel p\u00E4eval kell 10:00 meeldetuletus.</div></div></div>';
 }
 async function saveWait(id) {
   const t = find(id); if (!t) return;
@@ -677,9 +701,9 @@ async function saveWait(id) {
   closeOverlay(); changed(); toast('Tuletan meelde ' + wdDm(fu));
   if (!configured()) return;
   try {
-    const r = await api('commit', { events: [{ title: 'Küsi uuesti: ' + who + ' (' + t.title + ')', date: fu, time: '10:00', durationMin: 15, remindersMin: [0] }] });
+    const r = await api('commit', { events: [{ title: 'K\u00FCsi uuesti: ' + who + ' (' + t.title + ')', date: fu, time: '10:00', durationMin: 15, remindersMin: [0] }] });
     if (r.ok && r.ids && r.ids[0]) { t.waitEvent = r.ids[0]; t.updated = Date.now(); changed(); loadEvents(true); }
-  } catch (e) { /* jätk jääb ilma kalendrimeeldetuletuseta */ }
+  } catch (e) { /* j\u00E4tk j\u00E4\u00E4b ilma kalendrimeeldetuletuseta */ }
 }
 
 /* ===== projekti muutmine ===== */
@@ -689,8 +713,8 @@ function showProj(id) {
   $('#overlay').innerHTML = sheetHead(p ? 'PROJEKT' : 'UUS PROJEKT') +
     '<div class="field"><label class="lab" for="pn">NIMI</label><input id="pn" type="text" value="' + esc(p ? p.name : '') + '"></div>' +
     '<div class="field"><label class="lab" for="pt">MIS SEE ON / VIIMANE TEGEMINE</label><input id="pt" type="text" value="' + esc(p ? p.note : '') + '"></div>' +
-    '<div class="field"><label class="lab" for="px">JÄRGMINE SAMM</label><input id="px" type="text" value="' + esc(p ? p.next : '') + '"></div>' +
-    '<div class="field"><label class="lab" for="pd">VIIMATI TEGELESIN</label><div style="display:flex;gap:10px"><input id="pd" type="date" max="' + todayStr() + '" value="' + ymd(w) + '" style="flex:1;min-width:0"><button class="btn dark" data-act="ptoday" style="flex:none;width:90px;height:48px">TÄNA</button></div></div>' +
+    '<div class="field"><label class="lab" for="px">J\u00C4RGMINE SAMM</label><input id="px" type="text" value="' + esc(p ? p.next : '') + '"></div>' +
+    '<div class="field"><label class="lab" for="pd">VIIMATI TEGELESIN</label><div style="display:flex;gap:10px"><input id="pd" type="date" max="' + todayStr() + '" value="' + ymd(w) + '" style="flex:1;min-width:0"><button class="btn dark" data-act="ptoday" style="flex:none;width:90px;height:48px">T\u00C4NA</button></div></div>' +
     '<div class="btns"><button class="btn big dark pri" data-act="projsave" data-id="' + (p ? p.id : '') + '">SALVESTA</button>' + (p ? '<button class="btn big dark" data-act="projdel" data-id="' + p.id + '" style="flex:1">KUSTUTA</button>' : '') + '</div></div></div>';
 }
 function saveProj(id) {
@@ -709,17 +733,17 @@ function saveProj(id) {
 /* ===== seaded ===== */
 function showSettings() {
   $('#overlay').innerHTML = '<div class="sheet"><header><h1>Seaded</h1><button class="btn dark" data-act="close" style="flex:none;width:auto;height:36px;padding:0 12px">SULGE</button></header><div class="rule"></div><div class="body">' +
-    (lastErr ? '<div class="lab" style="color:var(--ink)">VIIMANE SÜNKROONI VIGA: ' + esc(lastErr) + '</div>' : '') +
+    (lastErr ? '<div class="lab" style="color:var(--ink)">VIIMANE S\u00DCNKROONI VIGA: ' + esc(lastErr) + '</div>' : '') +
     '<div class="field"><label class="lab" for="cu">APPS SCRIPTI AADRESS (/exec)</label><input id="cu" type="url" autocapitalize="off" autocorrect="off" spellcheck="false" value="' + esc(S.cfg.url) + '" placeholder="https://script.google.com/macros/s/.../exec"></div>' +
     '<div class="field"><label class="lab" for="ct">TOKEN (SAMA, MIS APP_TOKEN)</label><input id="ct" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" value="' + esc(S.cfg.token) + '"></div>' +
     '<label class="lab" style="display:flex;gap:10px;align-items:center;color:var(--ink)"><input id="ca" type="checkbox" style="width:22px;height:22px"' + (S.cfg.auto ? ' checked' : '') + '> SALVESTA KOHE, ILMA KINNITUSEATA</label>' +
     '<div class="field"><label class="lab" for="ci">IMPORDI ANDMED (JSON, valikuline)</label><textarea id="ci" rows="3" style="border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:VT323,monospace;font-size:18px;padding:8px"></textarea><button class="btn dark" data-act="import" style="flex:none;width:100%">IMPORDI</button></div>' +
     '<div class="btns"><button class="btn dark" data-act="export">EKSPORDI JSON</button><button class="btn dark" data-act="emojiall">LISA EMOJID</button></div>' +
-    '<div class="btns"><button class="btn big dark pri" data-act="savecfg">SALVESTA</button><button class="btn big dark" data-act="syncnow" style="flex:1">SÜNK</button></div>' +
-    '<div class="lab">Andmed on selles seadmes ja sünkroonitakse Google Sheetsiga. Token ja aadress jäävad ainult sellesse brauserisse.</div></div></div>';
+    '<div class="btns"><button class="btn big dark pri" data-act="savecfg">SALVESTA</button><button class="btn big dark" data-act="syncnow" style="flex:1">S\u00DCNK</button></div>' +
+    '<div class="lab">Andmed on selles seadmes ja s\u00FCnkroonitakse Google Sheetsiga. Token ja aadress j\u00E4\u00E4vad ainult sellesse brauserisse.</div></div></div>';
 }
 
-/* ===== sündmused ===== */
+/* ===== s\u00FCndmused ===== */
 let toastT = null;
 function toast(msg, ms) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), ms || 3200); }
 
@@ -752,7 +776,7 @@ document.addEventListener('click', (ev) => {
   else if (a === 'tasksave') saveTask(el.dataset.id);
   else if (a === 'res') showRes(el.dataset.id);
   else if (a === 'break') doBreak(el.dataset.id);
-  else if (a === 'bfirst') { const t = find(brk.id); addTask({ title: '5 min: ' + brk.steps[0], due: todayStr(), tag: t ? t.tag : '' }); if (t) { t.snooze = todayStr(); t.updated = Date.now(); } closeOverlay(); changed(); toast('Esimene samm on täna nimekirja eesotsas'); }
+  else if (a === 'bfirst') { const t = find(brk.id); addTask({ title: '5 min: ' + brk.steps[0], due: todayStr(), tag: t ? t.tag : '' }); if (t) { t.snooze = todayStr(); t.updated = Date.now(); } closeOverlay(); changed(); toast('Esimene samm on t\u00E4na nimekirja eesotsas'); }
   else if (a === 'ball') { const t = find(brk.id); brk.steps.forEach((x, i) => addTask({ title: (t ? t.title + ': ' : '') + x, due: i === 0 ? todayStr() : '', tag: t ? t.tag : '' })); if (t) { t.snooze = todayStr(); t.updated = Date.now(); } closeOverlay(); changed(); toast('Lisatud ' + brk.steps.length + ' sammu'); }
   else if (a === 'stale') showStale();
   else if (a === 'ev') showEvent(el.dataset.id);
@@ -764,7 +788,7 @@ document.addEventListener('click', (ev) => {
   else if (a === 'plain') { const t = pending.text; addTask({ title: t }); $('#capture').value = ''; closeOverlay(); }
   else if (a === 'close') closeOverlay();
   else if (a === 'import') { try { const j = JSON.parse($('#ci').value); S.tasks = mergeInto(S.tasks, j.tasks || []); S.projects = mergeInto(S.projects, j.projects || []); closeOverlay(); changed(); toast('Imporditud: ' + (j.tasks || []).length + ' ToDo-d, ' + (j.projects || []).length + ' projekti'); } catch (e) { toast('JSON ei sobi'); } }
-  else if (a === 'savecfg') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); toast('Seaded salvestatud (token ' + S.cfg.token.length + ' märki)'); sync(); }
+  else if (a === 'savecfg') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); toast('Seaded salvestatud (token ' + S.cfg.token.length + ' m\u00E4rki)'); sync(); }
   else if (a === 'syncnow') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); sync(); }
 });
 $('#title').addEventListener('click', showSettings);
@@ -780,7 +804,7 @@ $('#mic').addEventListener('click', () => {
   r.onstart = () => mic.classList.add('on');
   r.onend = () => mic.classList.remove('on');
   r.onresult = (e) => { inp.value = (inp.value ? inp.value + ' ' : '') + e.results[0][0].transcript; };
-  r.onerror = () => { inp.focus(); toast('Hääl ei töötanud, kasuta klaviatuuri mikrofoni'); };
+  r.onerror = () => { inp.focus(); toast('H\u00E4\u00E4l ei t\u00F6\u00F6tanud, kasuta klaviatuuri mikrofoni'); };
   try { r.start(); } catch (e) { inp.focus(); }
 });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { sync(); if (view === 'cal') loadEvents(); render(); } });
