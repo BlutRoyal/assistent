@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F9F7CF">
+<title>Assistent</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=UnifrakturCook:wght@700&display=swap">
+<style>
+:root{--cream:#F9F7CF;--ink:#0d0d0d;--mut:#5a5840;--mutd:#b9b78f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--cream);color:var(--ink);font-family:'VT323',monospace}
+button,input{font:inherit;border-radius:0}
+button{cursor:pointer}
+#app{max-width:480px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;position:relative}
+header{padding:calc(20px + env(safe-area-inset-top)) 20px 14px;display:flex;align-items:baseline;justify-content:space-between}
+h1{margin:0;font-family:'UnifrakturCook',serif;font-size:38px;line-height:1;font-weight:700;background:none;border:0;padding:0;color:var(--ink);text-align:left}
+#title{background:none;border:0;padding:0;margin:0;color:var(--ink);text-align:left}
+.lab{font-family:'Silkscreen',monospace;font-size:11px;color:var(--mut);line-height:1.4}
+.rule{margin:0 20px;border-top:2px solid var(--ink)}
+main{flex:1;min-height:0;overflow-y:auto;padding:0 20px 12px}
+.sec{padding:16px 0 4px}
+.hero{background:var(--ink);color:var(--cream);padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.hero .lab{color:var(--mutd)}
+.hero h2{margin:0;font-weight:400;font-size:42px;line-height:.92}
+.hero p{margin:0;font-size:21px;line-height:1;color:var(--mutd)}
+.btns{display:flex;gap:10px}
+.btn{height:46px;border:2px solid var(--cream);background:transparent;color:var(--cream);font-family:'Silkscreen',monospace;font-weight:700;font-size:13px;flex:1}
+.btn.pri{flex:2;background:var(--cream);color:var(--ink)}
+.btn.big{height:52px;font-size:14px}
+.btn.dark{border-color:var(--ink);color:var(--ink)}
+.btn.dark.pri{background:var(--ink);color:var(--cream)}
+.row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:2px dotted var(--ink)}
+.chk{flex:none;width:24px;height:24px;margin-top:3px;border:2px solid var(--ink);background:transparent;padding:0}
+.rt{flex:1;min-width:0}
+.rt b{display:block;font-weight:400;font-size:26px;line-height:1;overflow-wrap:anywhere}
+.rt span{display:block;margin-top:5px;font-family:'Silkscreen',monospace;font-size:11px;line-height:1.3;color:var(--mut)}
+.tag{flex:none;font-family:'Silkscreen',monospace;font-size:11px;padding:3px 6px;border:2px solid var(--ink)}
+.tag.inv{background:var(--ink);color:var(--cream)}
+.empty{padding:40px 0;font-size:26px;text-align:center}
+.dock{background:var(--ink);padding:14px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.cap{display:flex;gap:10px;margin:0}
+.cap input{flex:1;min-width:0;height:52px;padding:0 14px;border:0;background:var(--cream);color:var(--ink);font-family:'VT323',monospace;font-size:24px;outline:none}
+.cap input::placeholder{color:var(--mut);opacity:1}
+.mic{flex:none;width:52px;height:52px;padding:0;border:2px solid var(--cream);background:transparent;display:flex;align-items:center;justify-content:center}
+.mic.on{background:var(--cream)}
+.mic.on svg rect{fill:var(--ink)}
+.tabs{display:flex;justify-content:space-around;font-family:'Silkscreen',monospace;font-weight:700;font-size:12px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mutd);padding:0 0 4px}
+.tabs button.on{color:var(--cream);border-bottom-color:var(--cream)}
+.sheet{position:absolute;inset:0;background:var(--cream);z-index:10;display:flex;flex-direction:column}
+.sheet .body{flex:1;overflow-y:auto;padding:16px 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:16px}
+.said{border:2px solid var(--ink);padding:12px;font-size:27px;line-height:1.02;overflow-wrap:anywhere}
+.item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:2px dotted var(--ink)}
+.item .big{font-size:30px;line-height:1}
+.item .mid{font-size:23px;line-height:1}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input{height:48px;padding:0 12px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'VT323',monospace;font-size:22px}
+.toast{position:absolute;left:20px;right:20px;bottom:calc(140px + env(safe-area-inset-bottom));background:var(--ink);color:var(--cream);padding:12px 14px;font-family:'Silkscreen',monospace;font-size:12px;line-height:1.4;z-index:20}
+.seg{display:flex;gap:0;margin:14px 0 4px}
+.seg button{flex:1;height:38px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'Silkscreen',monospace;font-weight:700;font-size:12px}
+.seg button+button{border-left:0}
+.seg button.on{background:var(--ink);color:var(--cream)}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px}
+.mhead .nm{font-size:30px;line-height:1}
+.mhead button{width:44px;height:44px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'Silkscreen',monospace;font-weight:700;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{text-align:center;font-family:'Silkscreen',monospace;font-size:11px;color:var(--mut);padding-bottom:2px}
+.cell{aspect-ratio:1/1.05;border:2px solid transparent;background:transparent;color:var(--ink);padding:3px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:22px;line-height:1}
+.cell.out{color:var(--mutd)}
+.cell.today{background:var(--ink);color:var(--cream)}
+.cell.sel{border-color:var(--ink)}
+.cell.today.sel{border-color:var(--mut)}
+.dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.dots i{width:6px;height:6px;background:currentColor}
+.dots i.h{background:transparent;border:2px solid currentColor;width:6px;height:6px}
+.dhead{display:flex;justify-content:space-between;align-items:baseline;padding:18px 0 6px;font-family:'Silkscreen',monospace;font-size:12px;font-weight:700}
+.dhead.t span:first-child{background:var(--ink);color:var(--cream);padding:2px 6px}
+.ev{display:flex;gap:12px;align-items:baseline;padding:8px 0;border-bottom:2px dotted var(--ink)}
+.ev .tm{flex:none;width:62px;font-family:'Silkscreen',monospace;font-size:11px;color:var(--mut)}
+.ev .ti{flex:1;min-width:0;font-size:25px;line-height:1;overflow-wrap:anywhere}
+.ev.todo .ti::before{content:'';display:inline-block;width:12px;height:12px;border:2px solid var(--ink);margin-right:8px}
+.ph{padding:36px 0;font-size:26px;line-height:1.05}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <button class="" id="title" aria-label="Seaded"><h1 style="font-size:38px">Assistent</h1></button>
+    <span class="lab" id="stat"></span>
+  </header>
+  <div class="rule"></div>
+  <main id="view"></main>
+  <div class="dock">
+    <form class="cap" id="capForm" autocomplete="off">
+      <label for="capture" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Kirjuta või dikteeri</label>
+      <input id="capture" type="text" enterkeyhint="send" placeholder="Kirjuta või dikteeri...">
+      <button type="button" class="mic" id="mic" aria-label="Dikteeri">
+        <svg width="24" height="30" viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true"><g fill="#F9F7CF"><rect x="3" y="0" width="3" height="6"/><rect x="2" y="1" width="5" height="4"/><rect x="1" y="5" width="1" height="2"/><rect x="7" y="5" width="1" height="2"/><rect x="2" y="7" width="5" height="1"/><rect x="4" y="8" width="1" height="2"/><rect x="2" y="10" width="5" height="1"/></g></svg>
+      </button>
+    </form>
+    <nav class="tabs" id="tabs">
+      <button data-tab="today">TÄNA</button>
+      <button data-tab="cal">KALENDER</button>
+      <button data-tab="projects">PROJEKTID</button>
+      <button data-tab="research">UURI</button>
+    </nav>
+  </div>
+  <div id="overlay"></div>
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<script>
+'use strict';
+/* ===== abifunktsioonid ===== */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = (n) => String(n).padStart(2, '0');
+const ymd = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const todayStr = () => ymd(new Date());
+const utc = (s) => Date.parse(s + 'T12:00:00Z');
+const dayDiff = (a, b) => Math.round((utc(a) - utc(b)) / 864e5);
+const addDays = (s, n) => new Date(utc(s) + n * 864e5).toISOString().slice(0, 10);
+const wdOf = (s) => new Date(utc(s)).getUTCDay();
+const WD = ['P', 'E', 'T', 'K', 'N', 'R', 'L'];
+const MONTHS = ['jaanuar', 'veebruar', 'märts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'];
+const dm = (s) => s.slice(8, 10) + '.' + s.slice(5, 7);
+const wdDm = (s) => WD[wdOf(s)] + ' ' + dm(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+/* ===== olek ===== */
+const LS = 'assistent.v1';
+function seed() {
+  return { cfg: { url: '', token: '' }, tasks: [], projects: [], events: [], evKey: '', evAt: 0 };
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(LS)); } catch (e) { S = null; }
+if (!S || !S.tasks) S = seed();
+S.events = S.events || [];
+let view = 'today', cal = { mode: 'list', y: 0, m: 0, sel: '' }, pending = null, net = 'idle';
+{ const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = todayStr(); }
+
+function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) { /* ei midagi */ } }
+const configured = () => S.cfg && S.cfg.url && S.cfg.token;
+const openTasks = () => S.tasks.filter((t) => !t.done && !t.deleted);
+
+/* ===== taustaosa kõned ===== */
+async function api(action, payload) {
+  const r = await fetch(S.cfg.url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ token: S.cfg.token, action: action }, payload || {}))
+  });
+  return r.json();
+}
+function mergeInto(local, incoming) {
+  const map = new Map(local.map((x) => [x.id, x]));
+  incoming.forEach((it) => { const c = map.get(it.id); if (!c || Number(it.updated) > Number(c.updated)) map.set(it.id, it); });
+  return [...map.values()];
+}
+let syncTimer = null, syncing = false;
+function scheduleSync() { clearTimeout(syncTimer); syncTimer = setTimeout(sync, 800); }
+async function sync() {
+  if (!configured()) { net = 'cfg'; stat(); return; }
+  if (syncing) { scheduleSync(); return; }
+  syncing = true; net = 'sync'; stat();
+  try {
+    const res = await api('sync', { tasks: S.tasks, projects: S.projects });
+    if (!res.ok) throw new Error(res.error);
+    S.tasks = mergeInto(S.tasks, res.tasks);
+    S.projects = mergeInto(S.projects, res.projects);
+    save(); net = 'ok'; render();
+  } catch (e) { net = 'off'; }
+  syncing = false; stat();
+}
+function stat() {
+  const n = new Date();
+  const label = { idle: '', ok: ' · OK', sync: ' · SÜNKROON', off: ' · OFFLINE', cfg: ' · SEADED PUUDU' }[net] || '';
+  $('#stat').textContent = WD[n.getDay()] + ' ' + pad(n.getDate()) + '.' + pad(n.getMonth() + 1) + label;
+}
+function changed() { save(); render(); scheduleSync(); }
+
+/* ===== ToDo loogika ===== */
+function addTask(o) {
+  const now = Date.now();
+  S.tasks.push({ id: uid(), title: o.title, meta: o.meta || '', due: o.due || '', tag: o.tag || '', done: 0, doneAt: 0, eventId: o.eventId || '', snooze: '', created: now, updated: now, deleted: 0 });
+  changed();
+}
+function find(id) { return S.tasks.find((t) => t.id === id); }
+function setDone(id) { const t = find(id); if (!t) return; t.done = 1; t.doneAt = Date.now(); t.updated = t.doneAt; changed(); }
+function snooze(id) { const t = find(id); if (!t) return; t.snooze = todayStr(); t.updated = Date.now(); changed(); }
+function rank(t) {
+  const td = todayStr();
+  let r;
+  if (t.due) { const d = dayDiff(t.due, td); r = d < 0 ? 0 + (1 - 1 / (1 - d)) * 0.5 : d <= 7 ? 1 + d / 10 : 2 + Math.min(d, 365) / 400; }
+  else r = 3 + (t.created % 1000) / 1e6;
+  if (t.snooze === td) r += 10;
+  return r;
+}
+function sorted() { return openTasks().sort((a, b) => rank(a) - rank(b) || a.created - b.created); }
+function tagOf(t) {
+  if (t.due) {
+    const d = dayDiff(t.due, todayStr());
+    if (d < 0) return { txt: 'MÖÖDAS', inv: true };
+    if (d === 0) return { txt: 'TÄNA', inv: true };
+    if (d === 1) return { txt: 'HOMME', inv: false };
+    if (d <= 7) return { txt: d + ' PÄEVA', inv: false };
+    return { txt: dm(t.due), inv: false };
+  }
+  return t.tag ? { txt: t.tag, inv: false } : null;
+}
+function metaOf(t) {
+  const bits = [];
+  if (t.meta) bits.push(t.meta);
+  if (t.due) bits.push(wdDm(t.due));
+  return bits.join(' · ');
+}
+
+/* ===== projektid ===== */
+function projUpdate(text) {
+  const m = text.match(/^([^:\n\d][^:\n]{1,30}):\s*([\s\S]+)$/);
+  if (!m) return null;
+  const key = m[1].trim().toLowerCase();
+  if (key.length < 3) return null;
+  const p = S.projects.find((x) => !x.deleted && (x.name.toLowerCase().includes(key) || (x.name.length > 2 && key.includes(x.name.toLowerCase()))));
+  if (!p) return null;
+  const parts = m[2].split(/[,;.]?\s*järgmine(?:\s+samm)?\s*:?\s*/i);
+  const a = (parts[0] || '').trim(), b = (parts[1] || '').trim();
+  if (a) p.note = a;
+  if (b) p.next = b;
+  p.updated = Date.now();
+  changed();
+  return p;
+}
+
+/* ===== kalender ===== */
+function isoMonthRange(y, m) {
+  const first = y + '-' + pad(m + 1) + '-01';
+  const dim = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  return { from: addDays(first, -7), to: addDays(first, dim + 7) };
+}
+function evRange() {
+  if (cal.mode === 'month') return isoMonthRange(cal.y, cal.m);
+  const t = todayStr();
+  return { from: t, to: addDays(t, 45) };
+}
+let evBusy = false;
+async function loadEvents(force) {
+  if (!configured()) return;
+  const r = evRange(), key = r.from + '|' + r.to;
+  if (!force && S.evKey === key && Date.now() - S.evAt < 120000) return;
+  if (evBusy) return;
+  evBusy = true;
+  try {
+    const res = await api('events', r);
+    if (!res.ok) throw new Error(res.error);
+    const keep = S.events.filter((e) => e.endDate < r.from || e.date > r.to);
+    S.events = keep.concat(res.events);
+    S.evKey = key; S.evAt = Date.now(); save(); net = 'ok';
+  } catch (e) { net = 'off'; }
+  evBusy = false; stat(); if (view === 'cal') render();
+}
+function dayMap(from, to) {
+  const map = {};
+  const ensure = (d) => (map[d] = map[d] || { ev: [], td: [] });
+  S.events.forEach((e) => {
+    let d = e.date;
+    for (let i = 0; i < 31 && d <= (e.endDate || e.date); i++, d = addDays(d, 1)) {
+      if (d >= from && d <= to) ensure(d).ev.push(e);
+    }
+  });
+  openTasks().forEach((t) => { if (t.due && t.due >= from && t.due <= to) ensure(t.due).td.push(t); });
+  Object.values(map).forEach((v) => v.ev.sort((a, b) => (a.time || '').localeCompare(b.time || '')));
+  return map;
+}
+function evRows(day) {
+  const rows = day.ev.map((e) => '<div class="ev"><span class="tm">' + (e.allDay ? 'KOGU PÄEV' : esc(e.time)) + '</span><span class="ti">' + esc(e.title) + '</span></div>');
+  day.td.forEach((t) => rows.push('<div class="ev todo"><span class="tm">TODO</span><span class="ti">' + esc(t.title) + '</span></div>'));
+  return rows.join('');
+}
+function calHTML() {
+  const seg = '<div class="seg"><button data-act="cmode" data-v="list" class="' + (cal.mode === 'list' ? 'on' : '') + '">JÄRJEST</button><button data-act="cmode" data-v="month" class="' + (cal.mode === 'month' ? 'on' : '') + '">KUU</button></div>';
+  const note = configured() ? '' : '<div class="ph">Kalendri nägemiseks pane Seadetes (puuduta pealkirja) Apps Scripti aadress ja token.</div>';
+  if (cal.mode === 'list') {
+    const t = todayStr(), to = addDays(t, 45), map = dayMap(t, to);
+    let h = seg + note;
+    const over = openTasks().filter((x) => x.due && x.due < t).sort((a, b) => a.due.localeCompare(b.due));
+    if (over.length) h += '<div class="dhead"><span>MÖÖDAS</span><span>' + over.length + '</span></div>' + over.map((x) => '<div class="ev todo"><span class="tm">' + dm(x.due) + '</span><span class="ti">' + esc(x.title) + '</span></div>').join('');
+    const days = Object.keys(map).sort();
+    days.forEach((d) => {
+      const isT = d === t;
+      h += '<div class="dhead' + (isT ? ' t' : '') + '"><span>' + (isT ? 'TÄNA' : wdDm(d)) + '</span><span>' + (isT ? wdDm(d) : (dayDiff(d, t) === 1 ? 'HOMME' : dayDiff(d, t) + ' PÄEVA')) + '</span></div>' + evRows(map[d]);
+    });
+    if (!days.length && !over.length) h += '<div class="empty">Järgmise 45 päeva jooksul pole midagi.</div>';
+    return h;
+  }
+  const r = isoMonthRange(cal.y, cal.m), map = dayMap(r.from, r.to), t = todayStr();
+  const first = cal.y + '-' + pad(cal.m + 1) + '-01';
+  const off = (wdOf(first) + 6) % 7, dim = new Date(Date.UTC(cal.y, cal.m + 1, 0)).getUTCDate();
+  const total = Math.ceil((off + dim) / 7) * 7;
+  let h = seg + '<div class="mhead"><button data-act="mprev" aria-label="Eelmine kuu">&lt;</button><span class="nm">' + MONTHS[cal.m] + ' ' + cal.y + '</span><button data-act="mnext" aria-label="Järgmine kuu">&gt;</button></div><div class="grid">';
+  ['E', 'T', 'K', 'N', 'R', 'L', 'P'].forEach((w) => (h += '<div class="wd">' + w + '</div>'));
+  for (let i = 0; i < total; i++) {
+    const d = addDays(first, i - off), inM = d.slice(0, 7) === first.slice(0, 7), v = map[d];
+    let dots = '';
+    if (v) { dots = '<span class="dots">' + '<i></i>'.repeat(Math.min(v.ev.length, 3)) + '<i class="h"></i>'.repeat(Math.min(v.td.length, 2)) + '</span>'; }
+    h += '<button class="cell' + (inM ? '' : ' out') + (d === t ? ' today' : '') + (d === cal.sel ? ' sel' : '') + '" data-act="csel" data-d="' + d + '" aria-label="' + dm(d) + '">' + Number(d.slice(8)) + dots + '</button>';
+  }
+  h += '</div>';
+  const sd = map[cal.sel] || { ev: [], td: [] };
+  h += '<div class="dhead"><span>' + wdDm(cal.sel) + '</span><span></span></div>' + (sd.ev.length || sd.td.length ? evRows(sd) : '<div class="ev"><span class="ti" style="color:var(--mut)">Tühi päev</span></div>');
+  return note + h;
+}
+
+/* ===== vaated ===== */
+function todayHTML() {
+  const list = sorted();
+  if (!list.length) return '<div class="empty">Kõik tehtud.</div>';
+  const h = list[0], rest = list.slice(1), td = todayStr();
+  let lab = 'KOHE SEE';
+  if (h.due) { const d = dayDiff(h.due, td); lab = d < 0 ? 'KOHE SEE · MÖÖDAS ' + -d + ' PÄEVA' : d === 0 ? 'KOHE SEE · TÄNA' : 'JÄRGMINE · ' + wdDm(h.due); }
+  let html = '<div class="hero"><span class="lab">' + esc(lab) + '</span><h2>' + esc(h.title) + '</h2>' + (h.meta ? '<p>' + esc(h.meta) + '</p>' : '') +
+    '<div class="btns"><button class="btn pri" data-act="done" data-id="' + h.id + '">TEHTUD</button><button class="btn" data-act="snooze" data-id="' + h.id + '">HILJEM</button></div></div>';
+  html += '<div class="sec lab">JÄRGMISED · ' + rest.length + '</div>';
+  html += rest.map((t) => {
+    const g = tagOf(t), m = metaOf(t);
+    return '<div class="row"><button class="chk" aria-label="Märgi tehtud" data-act="done" data-id="' + t.id + '"></button><div class="rt"><b>' + esc(t.title) + '</b>' + (m ? '<span>' + esc(m) + '</span>' : '') + '</div>' + (g ? '<span class="tag' + (g.inv ? ' inv' : '') + '">' + esc(g.txt) + '</span>' : '') + '</div>';
+  }).join('');
+  return html;
+}
+function projHTML() {
+  const now = Date.now();
+  const list = S.projects.filter((p) => !p.deleted).sort((a, b) => b.updated - a.updated);
+  return '<div class="sec lab" style="display:flex;justify-content:space-between"><span>PROJEKTID · ' + list.length + '</span><span>PÄEVI VAIKUST</span></div>' + list.map((p) => {
+    const days = Math.max(0, Math.floor((now - p.updated) / 864e5)), stale = days >= 14;
+    return '<div class="row" style="align-items:center"><div class="rt"><b>' + esc(p.name) + '</b><span style="font-size:20px;font-family:VT323,monospace;color:var(--mut);margin-top:4px">' + esc(p.note) + '</span><span style="color:var(--ink)">' + (p.next ? 'JÄRGMINE: ' + esc(p.next) : 'JÄRGMINE: [PANE SIIA]') + '</span></div><div class="tag' + (stale ? ' inv' : '') + '" style="width:54px;text-align:center;font-family:VT323,monospace;font-size:32px;line-height:1;padding:6px 0">' + days + '</div></div>';
+  }).join('') + '<div class="lab" style="padding-top:14px">Uuenda nii: <b>Rahaasjad: tegin X, järgmine Y</b></div>';
+}
+const resHTML = () => '<div class="ph">UURI tuleb järgmise versiooniga: kirjutad küsimuse, vajutad UURI ja tulemus salvestub ToDo kirje juurde.</div>';
+
+function render() {
+  document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === view));
+  const main = $('#view'), top = main.scrollTop;
+  main.innerHTML = view === 'today' ? todayHTML() : view === 'cal' ? calHTML() : view === 'projects' ? projHTML() : resHTML();
+  main.scrollTop = top;
+  stat();
+}
+
+/* ===== vabatekst -> kinnitus ===== */
+function evLine(e) {
+  const rem = (e.remindersMin || []).map((m) => (m % 1440 === 0 ? m / 1440 + ' PÄEV' : m % 60 === 0 ? m / 60 + ' TUND' : m + ' MIN') + ' ENNE').join(' + ');
+  return '<div class="item"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">KALENDER</span><span class="big">' + esc(e.title) + '</span><span class="mid">' + wdDm(e.date) + ' · ' + (e.time ? 'kell ' + esc(e.time) : 'terve päev') + '</span>' + (rem ? '<span class="lab">POPUP: ' + rem + '</span>' : '') + '</div></div>';
+}
+function showConfirm(text, res) {
+  pending = { text: text, events: res.events || [], tasks: res.tasks || [] };
+  const p = pending;
+  const none = !p.events.length && !p.tasks.length;
+  let h = '<div class="sheet"><header><h1>Assistent</h1><span class="lab">VABATEKST KALENDRISSE</span></header><div class="rule"></div><div class="body">' +
+    '<div class="field"><span class="lab">SINA</span><div class="said">' + esc(p.text) + '</div></div><div><span class="lab">ASSISTENT LOEB ÄRA</span>';
+  h += p.events.map(evLine).join('');
+  h += p.tasks.map((t) => '<div class="item"><div class="chk" style="margin-top:3px"></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px"><span class="lab">TODO</span><span class="big" style="font-size:28px">' + esc(t.title) + '</span>' + (t.due ? '<span class="lab">TÄHTAEG ' + wdDm(t.due) + ' · KINNITAMATA = TEGEMATA</span>' : '') + '</div></div>').join('');
+  if (none) h += '<div class="ph">Ei leidnud midagi kalendrisse ega ToDo-sse.</div>';
+  h += '</div><div class="btns">' + (none ? '<button class="btn big dark pri" data-act="plain">LISA TAVALISE TODO-NA</button>' : '<button class="btn big dark pri" data-act="confirm">KINNITA</button>') + '<button class="btn big dark" data-act="edit" style="flex:1">MUUDA</button></div>' +
+    '<div class="lab">AI KULU: 1 LÜHIKE PÄRING. UURING JOOKSEB AINULT SIIS, KUI VAJUTAD UURI.</div></div></div>';
+  $('#overlay').innerHTML = h;
+}
+const closeOverlay = () => { $('#overlay').innerHTML = ''; pending = null; };
+
+async function confirmPending(btn) {
+  if (!pending) return;
+  btn.disabled = true; btn.textContent = '...';
+  let ids = [];
+  try {
+    if (pending.events.length) {
+      const r = await api('commit', { events: pending.events });
+      if (!r.ok) throw new Error(r.error);
+      ids = r.ids || [];
+    }
+  } catch (e) { toast('Kalendrisse ei saanud: ' + e.message); btn.disabled = false; btn.textContent = 'KINNITA'; return; }
+  const withEv = pending.events.length === 1 && pending.tasks.length >= 1;
+  pending.tasks.forEach((t) => addTask({ title: t.title, meta: t.note, due: t.due, eventId: withEv ? ids[0] : '' }));
+  $('#capture').value = '';
+  closeOverlay();
+  S.evAt = 0; loadEvents(true);
+  toast('Salvestatud');
+}
+
+async function submit() {
+  const inp = $('#capture'), text = inp.value.trim();
+  if (!text) return;
+  const pu = projUpdate(text);
+  if (pu) { inp.value = ''; toast('Projekt uuendatud: ' + pu.name); return; }
+  if (!configured()) { addTask({ title: text }); inp.value = ''; toast('Lisatud ToDo-sse (seaded puudu, AI-d ei kasutatud)'); return; }
+  inp.disabled = true; inp.placeholder = 'Loen ära...';
+  try {
+    const res = await api('parse', { text: text, today: todayStr() });
+    if (!res.ok) throw new Error(res.error);
+    showConfirm(text, res);
+  } catch (e) {
+    addTask({ title: text }); inp.value = '';
+    toast('AI ei vastanud, lisasin tavalise ToDo-na');
+  }
+  inp.disabled = false; inp.placeholder = 'Kirjuta või dikteeri...';
+}
+
+/* ===== seaded ===== */
+function showSettings() {
+  $('#overlay').innerHTML = '<div class="sheet"><header><h1>Seaded</h1><button class="btn dark" data-act="close" style="flex:none;width:auto;height:36px;padding:0 12px">SULGE</button></header><div class="rule"></div><div class="body">' +
+    '<div class="field"><label class="lab" for="cu">APPS SCRIPTI AADRESS (/exec)</label><input id="cu" type="url" value="' + esc(S.cfg.url) + '" placeholder="https://script.google.com/macros/s/.../exec"></div>' +
+    '<div class="field"><label class="lab" for="ct">TOKEN (SAMA, MIS APP_TOKEN)</label><input id="ct" type="password" value="' + esc(S.cfg.token) + '"></div>' +
+    '<div class="field"><label class="lab" for="ci">IMPORDI ANDMED (JSON, valikuline)</label><textarea id="ci" rows="3" style="border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:VT323,monospace;font-size:18px;padding:8px"></textarea><button class="btn dark" data-act="import" style="flex:none;width:100%">IMPORDI</button></div>' +
+    '<div class="btns"><button class="btn big dark pri" data-act="savecfg">SALVESTA</button><button class="btn big dark" data-act="syncnow" style="flex:1">SÜNK</button></div>' +
+    '<div class="lab">Andmed on selles seadmes ja sünkroonitakse Google Sheetsiga. Token ja aadress jäävad ainult sellesse brauserisse.</div></div></div>';
+}
+
+/* ===== sündmused ===== */
+let toastT = null;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 3200); }
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act],[data-tab]');
+  if (!el) return;
+  if (el.dataset.tab) { view = el.dataset.tab; render(); if (view === 'cal') loadEvents(); return; }
+  const a = el.dataset.act;
+  if (a === 'done') setDone(el.dataset.id);
+  else if (a === 'snooze') snooze(el.dataset.id);
+  else if (a === 'cmode') { cal.mode = el.dataset.v; render(); loadEvents(); }
+  else if (a === 'mprev') { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } render(); loadEvents(); }
+  else if (a === 'mnext') { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } render(); loadEvents(); }
+  else if (a === 'csel') { cal.sel = el.dataset.d; render(); }
+  else if (a === 'confirm') confirmPending(el);
+  else if (a === 'edit') closeOverlay();
+  else if (a === 'plain') { const t = pending.text; addTask({ title: t }); $('#capture').value = ''; closeOverlay(); }
+  else if (a === 'close') closeOverlay();
+  else if (a === 'import') { try { const j = JSON.parse($('#ci').value); S.tasks = mergeInto(S.tasks, j.tasks || []); S.projects = mergeInto(S.projects, j.projects || []); closeOverlay(); changed(); toast('Imporditud: ' + (j.tasks || []).length + ' ToDo-d, ' + (j.projects || []).length + ' projekti'); } catch (e) { toast('JSON ei sobi'); } }
+  else if (a === 'savecfg') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim() }; save(); closeOverlay(); toast('Seaded salvestatud'); sync(); }
+  else if (a === 'syncnow') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim() }; save(); closeOverlay(); sync(); }
+});
+$('#title').addEventListener('click', showSettings);
+$('#capForm').addEventListener('submit', (e) => { e.preventDefault(); submit(); });
+$('#mic').addEventListener('click', () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition, inp = $('#capture'), mic = $('#mic');
+  if (!SR) { inp.focus(); toast('Vajuta klaviatuuril mikrofoni'); return; }
+  const r = new SR(); r.lang = 'et-EE'; r.interimResults = false;
+  r.onstart = () => mic.classList.add('on');
+  r.onend = () => mic.classList.remove('on');
+  r.onresult = (e) => { inp.value = (inp.value ? inp.value + ' ' : '') + e.results[0][0].transcript; };
+  r.onerror = () => { inp.focus(); toast('Hääl ei töötanud, kasuta klaviatuuri mikrofoni'); };
+  try { r.start(); } catch (e) { inp.focus(); }
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { sync(); if (view === 'cal') loadEvents(); render(); } });
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+render();
+if (configured()) sync(); else { net = 'cfg'; stat(); }
+</script>
+</body>
+</html>
