@@ -140,6 +140,7 @@ let S;
 try { S = JSON.parse(localStorage.getItem(LS)); } catch (e) { S = null; }
 if (!S || !S.tasks) S = seed();
 S.events = S.events || [];
+let lastErr = '';
 let view = 'today', cal = { mode: 'list', y: 0, m: 0, sel: '' }, pending = null, net = 'idle';
 { const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = todayStr(); }
 
@@ -173,7 +174,8 @@ async function sync() {
     S.tasks = mergeInto(S.tasks, res.tasks);
     S.projects = mergeInto(S.projects, res.projects);
     save(); net = 'ok'; render();
-  } catch (e) { net = 'off'; }
+    lastErr = '';
+  } catch (e) { net = 'off'; lastErr = String((e && e.message) || e).slice(0, 140); }
   syncing = false; stat();
 }
 function stat() {
@@ -506,8 +508,9 @@ async function saveWait(id) {
 /* ===== seaded ===== */
 function showSettings() {
   $('#overlay').innerHTML = '<div class="sheet"><header><h1>Seaded</h1><button class="btn dark" data-act="close" style="flex:none;width:auto;height:36px;padding:0 12px">SULGE</button></header><div class="rule"></div><div class="body">' +
-    '<div class="field"><label class="lab" for="cu">APPS SCRIPTI AADRESS (/exec)</label><input id="cu" type="url" value="' + esc(S.cfg.url) + '" placeholder="https://script.google.com/macros/s/.../exec"></div>' +
-    '<div class="field"><label class="lab" for="ct">TOKEN (SAMA, MIS APP_TOKEN)</label><input id="ct" type="password" value="' + esc(S.cfg.token) + '"></div>' +
+    (lastErr ? '<div class="lab" style="color:var(--ink)">VIIMANE SÜNKROONI VIGA: ' + esc(lastErr) + '</div>' : '') +
+    '<div class="field"><label class="lab" for="cu">APPS SCRIPTI AADRESS (/exec)</label><input id="cu" type="url" autocapitalize="off" autocorrect="off" spellcheck="false" value="' + esc(S.cfg.url) + '" placeholder="https://script.google.com/macros/s/.../exec"></div>' +
+    '<div class="field"><label class="lab" for="ct">TOKEN (SAMA, MIS APP_TOKEN)</label><input id="ct" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" value="' + esc(S.cfg.token) + '"></div>' +
     '<label class="lab" style="display:flex;gap:10px;align-items:center;color:var(--ink)"><input id="ca" type="checkbox" style="width:22px;height:22px"' + (S.cfg.auto ? ' checked' : '') + '> SALVESTA KOHE, ILMA KINNITUSEATA</label>' +
     '<div class="field"><label class="lab" for="ci">IMPORDI ANDMED (JSON, valikuline)</label><textarea id="ci" rows="3" style="border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:VT323,monospace;font-size:18px;padding:8px"></textarea><button class="btn dark" data-act="import" style="flex:none;width:100%">IMPORDI</button></div>' +
     '<div class="btns"><button class="btn big dark pri" data-act="savecfg">SALVESTA</button><button class="btn big dark" data-act="syncnow" style="flex:1">SÜNK</button></div>' +
@@ -539,7 +542,7 @@ document.addEventListener('click', (ev) => {
   else if (a === 'plain') { const t = pending.text; addTask({ title: t }); $('#capture').value = ''; closeOverlay(); }
   else if (a === 'close') closeOverlay();
   else if (a === 'import') { try { const j = JSON.parse($('#ci').value); S.tasks = mergeInto(S.tasks, j.tasks || []); S.projects = mergeInto(S.projects, j.projects || []); closeOverlay(); changed(); toast('Imporditud: ' + (j.tasks || []).length + ' ToDo-d, ' + (j.projects || []).length + ' projekti'); } catch (e) { toast('JSON ei sobi'); } }
-  else if (a === 'savecfg') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); toast('Seaded salvestatud'); sync(); }
+  else if (a === 'savecfg') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); toast('Seaded salvestatud (token ' + S.cfg.token.length + ' märki)'); sync(); }
   else if (a === 'syncnow') { S.cfg = { url: $('#cu').value.trim(), token: $('#ct').value.trim(), auto: $('#ca').checked }; save(); closeOverlay(); sync(); }
 });
 $('#title').addEventListener('click', showSettings);
